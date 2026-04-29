@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@theme {
+  --font-mono: var(--font-family-mono);
+  --font-sans: var(--font-family-sans);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg-crt);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--bg-crt);
+  color: var(--amber-base);
+  font-family: var(--font-family-sans);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: var(--amber-dim);
+  color: var(--bg-crt);
+}
