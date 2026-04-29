@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { signalMonitorLabel, signalNavigation } from '../../data/navigation';
 
 type WaveConfig = {
@@ -8,6 +8,15 @@ type WaveConfig = {
   speeds: number[];
   phases: number[];
   width: number;
+};
+
+const navigateLabels: Record<string, string> = {
+  SYS: '[NAVIGATE: IDENTITY]',
+  WRK: '[NAVIGATE: WORK]',
+  INS: '[NAVIGATE: INSTALLATIONS]',
+  LIB: '[NAVIGATE: LIBRARY]',
+  LOG: '[NAVIGATE: LOGS]',
+  CNT: '[NAVIGATE: CONTACT]',
 };
 
 function makeWavePath(time: number, config: WaveConfig): string {
@@ -35,14 +44,12 @@ function makeWavePath(time: number, config: WaveConfig): string {
 
 export function SignalMonitorNav() {
   const [activeId, setActiveId] = useState<string | null>(null);
-  const activeSignal = useMemo(() => signalNavigation.find((signal) => signal.id === activeId) ?? null, [activeId]);
   const activeIdRef = useRef<string | null>(null);
   const pathRefs = useRef<Record<string, SVGPathElement | null>>({});
   const timeRef = useRef(0);
   const width = 1100;
   const height = 520;
-  const calloutY = activeSignal ? Math.max(42, activeSignal.y - 190) : 0;
-  const calloutLineY = activeSignal ? calloutY + 100 : 0;
+  const sectionLabel = activeId ? navigateLabels[activeId] : signalMonitorLabel;
 
   useEffect(() => {
     activeIdRef.current = activeId;
@@ -98,7 +105,7 @@ export function SignalMonitorNav() {
       aria-label="Secondary signal navigation"
     >
       <span className="absolute -top-px right-8 bg-[color:var(--bg-crt)] px-2 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-[color:var(--amber-core)]">
-        {signalMonitorLabel}
+        {sectionLabel}
       </span>
       <svg
         viewBox={`0 0 ${width} ${height}`}
@@ -155,19 +162,6 @@ export function SignalMonitorNav() {
           );
         })}
 
-        {activeSignal ? (
-          <g filter="url(#amberGlow)">
-            <line x1="720" y1={activeSignal.y} x2="720" y2={calloutLineY} stroke="var(--amber-core)" strokeWidth="1" opacity="0.95" />
-            <circle cx="720" cy={activeSignal.y} r="6" fill="var(--amber-core)" />
-            <rect x="700" y={calloutY} width="250" height="100" fill="var(--bg-crt)" stroke="var(--amber-core)" strokeWidth="1.5" />
-            <text x="720" y={calloutY + 38} fill="var(--amber-core)" fontFamily="var(--font-family-mono)" fontSize="30" letterSpacing="2">
-              {activeSignal.title}
-            </text>
-            <text x="720" y={calloutY + 75} fill="var(--amber-core)" fontFamily="var(--font-family-mono)" fontSize="16" letterSpacing="1.4">
-              {activeSignal.action} &gt;
-            </text>
-          </g>
-        ) : null}
       </svg>
     </section>
   );
