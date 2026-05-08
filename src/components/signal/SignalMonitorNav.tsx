@@ -35,10 +35,12 @@ type TerrainSegment = {
   xEnd: number;
 };
 
-const TERRAIN_SEGMENT_COUNT = 22;
+const TERRAIN_ROW_COUNT = 24;
+const TERRAIN_SEGMENT_COUNT = 8;
+const TERRAIN_POINT_STEP = 18;
 
-const terrainRows: TerrainRow[] = Array.from({ length: 42 }, (_, rowIndex) => {
-  const z = rowIndex / 41;
+const terrainRows: TerrainRow[] = Array.from({ length: TERRAIN_ROW_COUNT }, (_, rowIndex) => {
+  const z = rowIndex / (TERRAIN_ROW_COUNT - 1);
 
   return {
     id: `terrain-row-${rowIndex}`,
@@ -115,7 +117,6 @@ function getActiveBoost(active: boolean) {
 
 function makeWavePath(time: number, config: WaveConfig): string {
   const points: string[] = [];
-  const step = 10;
   const depthCurve = config.row.z ** 1.62;
   const horizonY = config.height * 0.3;
   const depthSpan = config.height * 0.56;
@@ -132,7 +133,7 @@ function makeWavePath(time: number, config: WaveConfig): string {
     points.push(`${x.toFixed(1)},${y.toFixed(1)}`);
   };
 
-  for (let x = config.segment.xStart; x <= config.segment.xEnd; x += step) {
+  for (let x = config.segment.xStart; x <= config.segment.xEnd; x += TERRAIN_POINT_STEP) {
     pushPoint(x);
   }
 
@@ -227,7 +228,7 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonit
             height,
           });
 
-          if (DEBUG_ANIMATION && row.rowIndex === 24 && segment.id === 'segment-11') {
+          if (DEBUG_ANIMATION && row.rowIndex === 14 && segment.id === 'segment-4') {
             const previousPath = debugPreviousPathRef.current;
             debugChangedPath = previousPath === null || previousPath !== path;
             debugPreviousPathRef.current = path;
