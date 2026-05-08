@@ -7,7 +7,7 @@ type HeaderModuleProps = {
 
 export function HeaderModule({ header }: HeaderModuleProps) {
   return (
-    <header className="relative grid h-40 border border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)] md:grid-cols-[160px_1fr]">
+    <header className="relative grid h-40 shrink-0 border border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)] md:grid-cols-[160px_1fr]">
       <span className="absolute right-8 top-0 -translate-y-1/2 bg-[color:var(--bg-crt)] px-2 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-[color:var(--amber-core)]">
         {header.section}
       </span>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { signalMonitorLabel, signalNavigation } from '../../data/navigation';
 
 type WaveConfig = {
@@ -42,18 +42,22 @@ function makeWavePath(time: number, config: WaveConfig): string {
   return `M ${points.join(' L ')}`;
 }
 
-export function SignalMonitorNav() {
-  const [activeId, setActiveId] = useState<string | null>(null);
+type SignalMonitorNavProps = {
+  activeNavId: string | null;
+  onActiveNavChange: (id: string | null) => void;
+};
+
+export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonitorNavProps) {
   const activeIdRef = useRef<string | null>(null);
   const pathRefs = useRef<Record<string, SVGPathElement | null>>({});
   const timeRef = useRef(0);
   const width = 1100;
   const height = 520;
-  const sectionLabel = activeId ? navigateLabels[activeId] : signalMonitorLabel;
+  const sectionLabel = activeNavId ? navigateLabels[activeNavId] : signalMonitorLabel;
 
   useEffect(() => {
-    activeIdRef.current = activeId;
-  }, [activeId]);
+    activeIdRef.current = activeNavId;
+  }, [activeNavId]);
 
   useEffect(() => {
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -101,68 +105,58 @@ export function SignalMonitorNav() {
 
   return (
     <section
-      className="relative w-full overflow-visible border border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)] text-[color:var(--amber-base)]"
+      className="relative h-full min-h-0 w-full overflow-visible border border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)] text-[color:var(--amber-base)]"
       aria-label="Secondary signal navigation"
     >
       <span className="absolute right-8 top-0 z-10 -translate-y-1/2 bg-[color:var(--bg-crt)] px-2 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-[color:var(--amber-core)]">
         {sectionLabel}
       </span>
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        className="block h-[420px] w-full md:h-[520px]"
-        preserveAspectRatio="none"
-        role="img"
-        aria-label="Overlapping navigation signal waveforms"
-      >
-        <defs>
-          <filter id="amberGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="2.2" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
+      <div className="h-full overflow-hidden">
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          className="block h-full w-full"
+          preserveAspectRatio="none"
+          role="img"
+          aria-label="Overlapping navigation signal waveforms"
+        >
+          {signalNavigation.map((signal) => {
+            const active = signal.id === activeNavId;
+            const path = makeWavePath(0, {
+              baseY: signal.y,
+              amplitude: active ? signal.amp * 1.62 : signal.amp * 0.42,
+              frequencies: [1 / signal.freq, 1 / (signal.freq * 0.42), 1 / (signal.freq * 0.19)],
+              speeds: [1.1, -0.76, 0.48],
+              phases: [signal.phase, signal.phase * 2.1, signal.phase * 0.7],
+              width,
+            });
 
-        {signalNavigation.map((signal) => {
-          const active = signal.id === activeId;
-          const path = makeWavePath(0, {
-            baseY: signal.y,
-            amplitude: active ? signal.amp * 1.62 : signal.amp * 0.42,
-            frequencies: [1 / signal.freq, 1 / (signal.freq * 0.42), 1 / (signal.freq * 0.19)],
-            speeds: [1.1, -0.76, 0.48],
-            phases: [signal.phase, signal.phase * 2.1, signal.phase * 0.7],
-            width,
-          });
-
-          return (
-            <a
-              key={signal.id}
-              href={signal.href}
-              aria-label={`${signal.title}: ${signal.action}`}
-              onMouseEnter={() => setActiveId(signal.id)}
-              onMouseLeave={() => setActiveId(null)}
-              onFocus={() => setActiveId(signal.id)}
-              onBlur={() => setActiveId(null)}
-            >
-              <path
-                ref={(node) => {
-                  pathRefs.current[signal.id] = node;
-                }}
-                d={path}
-                fill="none"
-                stroke={active ? 'var(--amber-core)' : 'var(--amber-dim)'}
-                strokeWidth={active ? 1.75 : 1.05}
-                opacity={active ? 1 : 0.42}
-                filter={active ? 'url(#amberGlow)' : undefined}
-                className={active ? 'monitor-signal-path-active' : 'monitor-signal-path'}
-              />
-              <rect x="0" y={signal.y - 28} width={width} height="56" fill="transparent" className="cursor-pointer" />
-            </a>
-          );
-        })}
-
-      </svg>
+            return (
+              <a
+                key={signal.id}
+                href={signal.href}
+                aria-label={`${signal.title}: ${signal.action}`}
+                onMouseEnter={() => onActiveNavChange(signal.id)}
+                onMouseLeave={() => onActiveNavChange(null)}
+                onFocus={() => onActiveNavChange(signal.id)}
+                onBlur={() => onActiveNavChange(null)}
+              >
+                <path
+                  ref={(node) => {
+                    pathRefs.current[signal.id] = node;
+                  }}
+                  d={path}
+                  fill="none"
+                  stroke={active ? 'var(--amber-core)' : 'var(--amber-dim)'}
+                  strokeWidth={active ? 1.75 : 1.05}
+                  opacity={active ? 1 : 0.42}
+                  className={active ? 'monitor-signal-path-active' : 'monitor-signal-path'}
+                />
+                <rect x="0" y={signal.y - 28} width={width} height="56" fill="transparent" className="cursor-pointer" />
+              </a>
+            );
+          })}
+        </svg>
+      </div>
     </section>
   );
 }

@@ -15,14 +15,22 @@ const icons: Record<string, string> = {
   CNT: cntIcon,
 };
 
-export function BottomNav() {
+type BottomNavProps = {
+  onActiveNavChange: (id: string | null) => void;
+};
+
+export function BottomNav({ onActiveNavChange }: BottomNavProps) {
   return (
-    <nav aria-label="Bottom navigation" className="flex flex-wrap justify-center gap-6">
+    <nav aria-label="Bottom navigation" className="flex shrink-0 flex-wrap justify-center gap-6">
       {bottomNavigation.map((item) => (
         <a
           key={item.id}
           href={item.href}
           aria-label={item.ariaLabel}
+          onMouseEnter={() => onActiveNavChange(item.id)}
+          onMouseLeave={() => onActiveNavChange(null)}
+          onFocus={() => onActiveNavChange(item.id)}
+          onBlur={() => onActiveNavChange(null)}
           className="group grid h-11 w-28 grid-cols-[44px_1fr] overflow-hidden rounded-md border border-[color:var(--amber-base)] bg-[color:var(--bg-crt)] font-mono transition-[border-color,filter] duration-100 hover:border-[color:var(--amber-core)] hover:[filter:var(--glow-svg)] focus-visible:border-[color:var(--amber-core)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--amber-core)] focus-visible:[filter:var(--glow-svg)]"
         >
           <span
