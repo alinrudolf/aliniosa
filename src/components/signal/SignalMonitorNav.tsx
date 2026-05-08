@@ -7,6 +7,7 @@ const DEBUG_VISUAL = false;
 type WaveConfig = {
   row: TerrainRow;
   motionScale: number;
+  amplitudeScale: number;
   width: number;
   height: number;
 };
@@ -16,6 +17,7 @@ type TerrainRow = {
   rowIndex: number;
   z: number;
   navId: string;
+  navIndex: number;
 };
 
 type NavigationRegion = {
@@ -39,8 +41,31 @@ const terrainRows: TerrainRow[] = Array.from({ length: TERRAIN_ROW_COUNT }, (_, 
     rowIndex,
     z,
     navId: signalNavigation[navIndex].id,
+    navIndex,
   };
 });
+
+const hoverEnergyByDistance = [0.74, 0.2, 0.06];
+
+function getHoverTarget(row: TerrainRow, activeNavId: string | null) {
+  if (!activeNavId) {
+    return 0;
+  }
+
+  const activeIndex = signalNavigation.findIndex((signal) => signal.id === activeNavId);
+
+  if (activeIndex < 0) {
+    return 0;
+  }
+
+  const distance = Math.abs(row.navIndex - activeIndex);
+
+  return hoverEnergyByDistance[distance] ?? 0;
+}
+
+function mixNumber(from: number, to: number, amount: number) {
+  return from + (to - from) * amount;
+}
 
 function createNavigationRegions(height: number): NavigationRegion[] {
   const horizonY = height * 0.3;
@@ -79,7 +104,7 @@ function makeWavePath(time: number, config: WaveConfig): string {
   const depthSpan = config.height * 0.56;
   const baseY = horizonY + depthCurve * depthSpan;
   const debugScale = DEBUG_ANIMATION ? 3.5 : 1;
-  const amplitude = (16 + config.row.z ** 1.35 * 54) * debugScale;
+  const amplitude = (16 + config.row.z ** 1.35 * 54) * debugScale * config.amplitudeScale;
   const perspectiveScale = 0.52 + config.row.z * 0.48;
 
   const pushPoint = (x: number) => {
@@ -111,6 +136,7 @@ type SignalMonitorNavProps = {
 export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonitorNavProps) {
   const activeIdRef = useRef<string | null>(null);
   const pathRefs = useRef<Record<string, SVGPathElement | null>>({});
+  const hoverEnergyRefs = useRef<Record<string, number>>({});
   const debugPreviousPathRef = useRef<string | null>(null);
   const timeRef = useRef(0);
   const width = 1100;
@@ -127,8 +153,9 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonit
     let animationFrame = 0;
     let lastFrameTime = performance.now();
 
-    const renderTerrain = () => {
+    const renderTerrain = (elapsed = 0) => {
       let debugChangedPath = false;
+      const easing = elapsed > 0 ? Math.min(0.18, elapsed * 7.5) : 1;
 
       terrainRows.forEach((row) => {
         const pathElement = pathRefs.current[row.id];
@@ -137,11 +164,19 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonit
           return;
         }
 
-        const active = row.navId === activeIdRef.current;
+        const baseOpacity = 0.12 + row.z * 0.54;
+        const baseStrokeWidth = 0.65 + row.z * 0.78;
+        const hoverTarget = getHoverTarget(row, activeIdRef.current);
+        const hoverEnergy = mixNumber(hoverEnergyRefs.current[row.id] ?? 0, hoverTarget, easing);
+        const tonalWeight = Math.round(mixNumber(0, 62, hoverEnergy));
+        const easedOpacity = Math.min(0.82, baseOpacity + hoverEnergy * 0.16);
+        const easedStrokeWidth = Math.min(1.7, baseStrokeWidth + hoverEnergy * 0.18);
+        const amplitudeScale = 1 + hoverEnergy * 0.15;
         const motionScale = DEBUG_ANIMATION ? 5 : 1.35;
         const path = makeWavePath(timeRef.current, {
           row,
           motionScale,
+          amplitudeScale,
           width,
           height,
         });
@@ -152,7 +187,14 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonit
           debugPreviousPathRef.current = path;
         }
 
+        hoverEnergyRefs.current[row.id] = hoverEnergy;
         pathElement.setAttribute('d', path);
+        pathElement.setAttribute(
+          'stroke',
+          `color-mix(in srgb, var(--amber-core) ${tonalWeight}%, var(--amber-dim))`,
+        );
+        pathElement.setAttribute('stroke-width', (DEBUG_VISUAL ? easedStrokeWidth * 1.6 : easedStrokeWidth).toFixed(2));
+        pathElement.setAttribute('opacity', (DEBUG_VISUAL ? Math.min(1, easedOpacity + 0.12) : easedOpacity).toFixed(3));
       });
 
       if (DEBUG_ANIMATION && debugPreviousPathRef.current && !debugChangedPath) {
@@ -163,16 +205,17 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonit
     const renderWaveforms = (frameTime: number) => {
       const elapsed = (frameTime - lastFrameTime) / 1000;
       lastFrameTime = frameTime;
-      timeRef.current += elapsed;
 
-      renderTerrain();
+      if (DEBUG_ANIMATION || !motionQuery.matches) {
+        timeRef.current += elapsed;
+      }
+
+      renderTerrain(elapsed);
       animationFrame = window.requestAnimationFrame(renderWaveforms);
     };
 
-    if (DEBUG_ANIMATION || !motionQuery.matches) {
-      renderTerrain();
-      animationFrame = window.requestAnimationFrame(renderWaveforms);
-    }
+    renderTerrain();
+    animationFrame = window.requestAnimationFrame(renderWaveforms);
 
     return () => {
       window.cancelAnimationFrame(animationFrame);
@@ -196,13 +239,13 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonit
           aria-label="Overlapping navigation signal waveforms"
         >
           {terrainRows.map((row) => {
-            const active = row.navId === activeNavId;
             const opacity = 0.12 + row.z * 0.54;
             const strokeWidth = 0.65 + row.z * 0.78;
             const motionScale = DEBUG_ANIMATION ? 5 : 1.35;
             const path = makeWavePath(0, {
               row,
               motionScale,
+              amplitudeScale: 1,
               width,
               height,
             });
@@ -215,11 +258,11 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonit
                 }}
                 d={path}
                 fill="none"
-                stroke={active ? 'var(--amber-core)' : 'var(--amber-dim)'}
-                strokeWidth={DEBUG_VISUAL && active ? 2.5 : Math.min(1.8, strokeWidth + (active ? 0.28 : 0))}
-                opacity={active ? (DEBUG_VISUAL ? 1 : Math.min(0.92, opacity + 0.2)) : opacity}
+                stroke="var(--amber-dim)"
+                strokeWidth={DEBUG_VISUAL ? strokeWidth * 1.6 : strokeWidth}
+                opacity={DEBUG_VISUAL ? Math.min(1, opacity + 0.12) : opacity}
                 vectorEffect="non-scaling-stroke"
-                className={active ? 'monitor-signal-path-active' : 'monitor-signal-path'}
+                className="monitor-signal-path"
               />
             );
           })}
