@@ -171,7 +171,7 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonit
         const tonalWeight = Math.round(mixNumber(0, 62, hoverEnergy));
         const easedOpacity = Math.min(0.82, baseOpacity + hoverEnergy * 0.16);
         const easedStrokeWidth = Math.min(1.7, baseStrokeWidth + hoverEnergy * 0.18);
-        const amplitudeScale = 1 + hoverEnergy * 0.15;
+        const amplitudeScale = 1 + hoverEnergy * 0.216;
         const motionScale = DEBUG_ANIMATION ? 5 : 1.35;
         const path = makeWavePath(timeRef.current, {
           row,
