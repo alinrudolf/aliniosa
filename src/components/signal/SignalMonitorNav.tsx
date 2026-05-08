@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { signalMonitorLabel, signalNavigation } from '../../data/navigation';
+import { signalHoverLabels, signalMonitorLabel, signalNavigation } from '../../data/navigation';
 
 type WaveConfig = {
   baseY: number;
@@ -8,15 +8,6 @@ type WaveConfig = {
   speeds: number[];
   phases: number[];
   width: number;
-};
-
-const navigateLabels: Record<string, string> = {
-  SYS: '[NAVIGATE: IDENTITY]',
-  WRK: '[NAVIGATE: WORK]',
-  INS: '[NAVIGATE: INSTALLATIONS]',
-  LIB: '[NAVIGATE: LIBRARY]',
-  LOG: '[NAVIGATE: LOGS]',
-  CNT: '[NAVIGATE: CONTACT]',
 };
 
 function makeWavePath(time: number, config: WaveConfig): string {
@@ -53,7 +44,7 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonit
   const timeRef = useRef(0);
   const width = 1100;
   const height = 520;
-  const sectionLabel = activeNavId ? navigateLabels[activeNavId] : signalMonitorLabel;
+  const sectionLabel = activeNavId ? signalHoverLabels[activeNavId] : signalMonitorLabel;
 
   useEffect(() => {
     activeIdRef.current = activeNavId;

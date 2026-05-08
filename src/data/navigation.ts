@@ -8,7 +8,7 @@ export type NavigationItem = {
 };
 
 export const siteHeader = {
-  section: '[SECTION: HEADER]',
+  section: '[HEADER]',
   label: 'personal system interface',
   title: 'ALIN IOSA',
   summary: 'Product manager and retro-futuristic hardware builder',
@@ -17,7 +17,17 @@ export const siteHeader = {
 
 export type SiteHeader = typeof siteHeader;
 
-export const signalMonitorLabel = '[SECTION: BODY]';
+export const navPanelLabel = '[NAV]';
+export const signalMonitorLabel = '[BODY]';
+
+export const signalHoverLabels: Record<string, string> = {
+  SYS: '[IDENTITY]',
+  WRK: '[WORK]',
+  INS: '[INSTALLATIONS]',
+  LIB: '[LIBRARY]',
+  LOG: '[LOGS]',
+  CNT: '[CONTACT]',
+};
 
 export const navigation: NavigationItem[] = [
   { id: 'system', label: 'System', signal: 38, href: routes.system },

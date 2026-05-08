@@ -6,17 +6,19 @@ import { SignalMonitorNav } from '../components/signal/SignalMonitorNav';
 import { siteHeader } from '../data/navigation';
 
 export function App() {
-  const [footerActiveNavId, setFooterActiveNavId] = useState<string | null>(null);
+  const [topNavActiveNavId, setTopNavActiveNavId] = useState<string | null>(null);
   const [waveformActiveNavId, setWaveformActiveNavId] = useState<string | null>(null);
-  const activeNavId = footerActiveNavId ?? waveformActiveNavId;
+  const activeNavId = topNavActiveNavId ?? waveformActiveNavId;
 
   return (
     <SiteShell>
-      <HeaderModule header={siteHeader} />
+      <div className="grid shrink-0 gap-12 lg:grid-cols-[1fr_360px]">
+        <HeaderModule header={siteHeader} />
+        <BottomNav onActiveNavChange={setTopNavActiveNavId} />
+      </div>
       <main className="min-h-0 flex-1 overflow-visible">
         <SignalMonitorNav activeNavId={activeNavId} onActiveNavChange={setWaveformActiveNavId} />
       </main>
-      <BottomNav onActiveNavChange={setFooterActiveNavId} />
     </SiteShell>
   );
 }
