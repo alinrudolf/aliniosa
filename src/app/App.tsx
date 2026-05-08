@@ -4,11 +4,21 @@ import { HeaderModule } from '../components/layout/HeaderModule';
 import { SiteShell } from '../components/layout/SiteShell';
 import { SignalMonitorNav } from '../components/signal/SignalMonitorNav';
 import { siteHeader } from '../data/navigation';
+import { TerrainPreviewField } from './TerrainPreviewField';
+import { TerrainPreview } from './TerrainPreview';
 
 export function App() {
   const [topNavActiveNavId, setTopNavActiveNavId] = useState<string | null>(null);
   const [waveformActiveNavId, setWaveformActiveNavId] = useState<string | null>(null);
   const activeNavId = topNavActiveNavId ?? waveformActiveNavId;
+
+  if (window.location.pathname === '/terrain-preview') {
+    return <TerrainPreview />;
+  }
+
+  if (window.location.pathname === '/terrain-preview-2') {
+    return <TerrainPreviewField />;
+  }
 
   return (
     <SiteShell>
