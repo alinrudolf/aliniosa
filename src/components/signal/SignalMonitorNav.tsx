@@ -4,20 +4,22 @@ import { signalHoverLabels, signalMonitorLabel, signalNavigation } from '../../d
 const DEBUG_ANIMATION = false;
 const DEBUG_VISUAL = false;
 
-type WaveConfig = {
-  row: TerrainRow;
-  motionScale: number;
-  amplitudeScale: number;
-  width: number;
-  height: number;
-};
-
 type TerrainRow = {
   id: string;
   rowIndex: number;
   z: number;
   navId: string;
   navIndex: number;
+  renderDepth: number;
+  baseY: number;
+  baseAmplitude: number;
+  perspectiveScale: number;
+  baseOpacity: number;
+  baseStrokeWidth: number;
+  primaryOffset: number;
+  secondaryOffset: number;
+  tertiaryOffset: number;
+  hasGlow: boolean;
 };
 
 type NavigationRegion = {
@@ -29,12 +31,59 @@ type NavigationRegion = {
   height: number;
 };
 
+type WaveFrame = {
+  primaryTime: number;
+  secondaryTime: number;
+  tertiaryTime: number;
+};
+
+type WaveSample = {
+  xLabel: string;
+  primaryX: number;
+  secondaryX: number;
+  tertiaryX: number;
+  edgeFalloff: number;
+};
+
+const SVG_WIDTH = 1100;
+const SVG_HEIGHT = 520;
+const WAVE_RENDER_FPS = 30;
+const WAVE_RENDER_INTERVAL = 1000 / WAVE_RENDER_FPS;
+const INITIAL_WAVE_FRAME: WaveFrame = {
+  primaryTime: 0,
+  secondaryTime: 0,
+  tertiaryTime: 0,
+};
 const TERRAIN_VISIBLE_ROW_COUNT = 24;
 const TERRAIN_LOWER_EXTENSION_ROW_COUNT = 7;
 const TERRAIN_ROW_COUNT = TERRAIN_VISIBLE_ROW_COUNT + TERRAIN_LOWER_EXTENSION_ROW_COUNT;
 const TERRAIN_LOWER_EXTENSION_DEPTH =
   TERRAIN_LOWER_EXTENSION_ROW_COUNT / (TERRAIN_VISIBLE_ROW_COUNT - 1);
-const TERRAIN_POINT_STEP = 18;
+const TERRAIN_POINT_STEP = 24;
+
+function createWaveSamples(width: number): WaveSample[] {
+  const samples: WaveSample[] = [];
+
+  const pushSample = (x: number) => {
+    samples.push({
+      xLabel: x.toFixed(1),
+      primaryX: x * 0.0072,
+      secondaryX: x * 0.013,
+      tertiaryX: x * 0.0048,
+      edgeFalloff: 0.58 + Math.sin((x / width) * Math.PI) * 0.42,
+    });
+  };
+
+  for (let x = 0; x < width; x += TERRAIN_POINT_STEP) {
+    pushSample(x);
+  }
+
+  pushSample(width);
+
+  return samples;
+}
+
+const waveSamples = createWaveSamples(SVG_WIDTH);
 
 const terrainRows: TerrainRow[] = Array.from({ length: TERRAIN_ROW_COUNT }, (_, rowIndex) => {
   const visibleRowMaxIndex = TERRAIN_VISIBLE_ROW_COUNT - 1;
@@ -44,6 +93,11 @@ const terrainRows: TerrainRow[] = Array.from({ length: TERRAIN_ROW_COUNT }, (_, 
       ? rowIndex / visibleRowMaxIndex
       : 1 + (extensionRowIndex / TERRAIN_LOWER_EXTENSION_ROW_COUNT) * TERRAIN_LOWER_EXTENSION_DEPTH;
   const navIndex = Math.min(signalNavigation.length - 1, Math.floor(z * signalNavigation.length));
+  const renderDepth = Math.min(1, z);
+  const depthCurve = z ** 1.62;
+  const horizonY = SVG_HEIGHT * 0.3;
+  const depthSpan = SVG_HEIGHT * 0.56;
+  const debugScale = DEBUG_ANIMATION ? 3.5 : 1;
 
   return {
     id: `terrain-row-${rowIndex}`,
@@ -51,23 +105,27 @@ const terrainRows: TerrainRow[] = Array.from({ length: TERRAIN_ROW_COUNT }, (_, 
     z,
     navId: signalNavigation[navIndex].id,
     navIndex,
+    renderDepth,
+    baseY: horizonY + depthCurve * depthSpan,
+    baseAmplitude: (16 + z ** 1.35 * 54) * debugScale,
+    perspectiveScale: 0.52 + z * 0.48,
+    baseOpacity: 0.12 + renderDepth * 0.54,
+    baseStrokeWidth: 0.65 + renderDepth * 0.78,
+    primaryOffset: z * 5.8 + 0.4,
+    secondaryOffset: -z * 7.1 + 1.7,
+    tertiaryOffset: z * 420 * 0.0048 + 2.6,
+    hasGlow: rowIndex % 3 === 0 || rowIndex >= TERRAIN_VISIBLE_ROW_COUNT - 2,
   };
 });
 
 const hoverEnergyByDistance = [0.74, 0.2, 0.06];
 
-function getHoverTarget(row: TerrainRow, activeNavId: string | null) {
-  if (!activeNavId) {
+function getHoverTarget(row: TerrainRow, activeNavIndex: number) {
+  if (activeNavIndex < 0) {
     return 0;
   }
 
-  const activeIndex = signalNavigation.findIndex((signal) => signal.id === activeNavId);
-
-  if (activeIndex < 0) {
-    return 0;
-  }
-
-  const distance = Math.abs(row.navIndex - activeIndex);
+  const distance = Math.abs(row.navIndex - activeNavIndex);
 
   return hoverEnergyByDistance[distance] ?? 0;
 }
@@ -93,48 +151,22 @@ function createNavigationRegions(height: number): NavigationRegion[] {
   }));
 }
 
-function terrainHeight(
-  x: number,
-  z: number,
-  time: number,
-  motionScale: number,
-) {
-  return (
-    Math.sin(x * 0.0072 + z * 5.8 + time * 0.82 * motionScale + 0.4) * 0.52 +
-    Math.sin(x * 0.013 - z * 7.1 - time * 0.58 * motionScale + 1.7) * 0.3 +
-    Math.sin((x + z * 420) * 0.0048 + time * 0.42 * motionScale + 2.6) * 0.18
-  );
-}
+function makeWavePath(row: TerrainRow, frame: WaveFrame, amplitudeScale: number): string {
+  let path = '';
+  const amplitude = row.baseAmplitude * row.perspectiveScale * amplitudeScale;
 
-function makeWavePath(time: number, config: WaveConfig): string {
-  const points: string[] = [];
-  const depthCurve = config.row.z ** 1.62;
-  const horizonY = config.height * 0.3;
-  const depthSpan = config.height * 0.56;
-  const baseY = horizonY + depthCurve * depthSpan;
-  const debugScale = DEBUG_ANIMATION ? 3.5 : 1;
-  const amplitude = (16 + config.row.z ** 1.35 * 54) * debugScale * config.amplitudeScale;
-  const perspectiveScale = 0.52 + config.row.z * 0.48;
+  for (let index = 0; index < waveSamples.length; index += 1) {
+    const sample = waveSamples[index];
+    const heightValue =
+      Math.sin(sample.primaryX + row.primaryOffset + frame.primaryTime) * 0.52 +
+      Math.sin(sample.secondaryX + row.secondaryOffset + frame.secondaryTime) * 0.3 +
+      Math.sin(sample.tertiaryX + row.tertiaryOffset + frame.tertiaryTime) * 0.18;
+    const y = row.baseY - heightValue * amplitude * sample.edgeFalloff;
 
-  const pushPoint = (x: number) => {
-    const edgeFalloff = 0.58 + Math.sin((x / config.width) * Math.PI) * 0.42;
-    const heightValue = terrainHeight(x, config.row.z, time, config.motionScale);
-    const y = baseY - heightValue * amplitude * perspectiveScale * edgeFalloff;
-
-    points.push(`${x.toFixed(1)},${y.toFixed(1)}`);
-  };
-
-  for (let x = 0; x <= config.width; x += TERRAIN_POINT_STEP) {
-    pushPoint(x);
+    path += `${index === 0 ? 'M' : ' L'} ${sample.xLabel},${y.toFixed(1)}`;
   }
 
-  const lastPoint = points[points.length - 1];
-
-  if (!lastPoint || !lastPoint.startsWith(config.width.toFixed(1))) {
-    pushPoint(config.width);
-  }
-
-  return `M ${points.join(' L ')}`;
+  return path;
 }
 
 type SignalMonitorNavProps = {
@@ -143,53 +175,50 @@ type SignalMonitorNavProps = {
 };
 
 export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonitorNavProps) {
-  const activeIdRef = useRef<string | null>(null);
-  const pathRefs = useRef<Record<string, SVGPathElement | null>>({});
-  const hoverEnergyRefs = useRef<Record<string, number>>({});
+  const activeNavIndexRef = useRef(-1);
+  const pathRefs = useRef<Array<SVGPathElement | null>>([]);
+  const hoverEnergyRefs = useRef<number[]>([]);
   const debugPreviousPathRef = useRef<string | null>(null);
   const timeRef = useRef(0);
-  const width = 1100;
-  const height = 520;
-  const navigationRegions = useMemo(() => createNavigationRegions(height), [height]);
+  const navigationRegions = useMemo(() => createNavigationRegions(SVG_HEIGHT), []);
   const sectionLabel = activeNavId ? signalHoverLabels[activeNavId] : signalMonitorLabel;
 
   useEffect(() => {
-    activeIdRef.current = activeNavId;
+    activeNavIndexRef.current = activeNavId
+      ? signalNavigation.findIndex((signal) => signal.id === activeNavId)
+      : -1;
   }, [activeNavId]);
 
   useEffect(() => {
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     let animationFrame = 0;
     let lastFrameTime = performance.now();
+    let renderAccumulator = 0;
 
     const renderTerrain = (elapsed = 0) => {
       let debugChangedPath = false;
       const easing = elapsed > 0 ? Math.min(0.18, elapsed * 7.5) : 1;
+      const motionScale = DEBUG_ANIMATION ? 5 : 1.35;
+      const frame = {
+        primaryTime: timeRef.current * 0.82 * motionScale,
+        secondaryTime: timeRef.current * -0.58 * motionScale,
+        tertiaryTime: timeRef.current * 0.42 * motionScale,
+      };
 
       terrainRows.forEach((row) => {
-        const pathElement = pathRefs.current[row.id];
+        const pathElement = pathRefs.current[row.rowIndex];
 
         if (!pathElement) {
           return;
         }
 
-        const renderDepth = Math.min(1, row.z);
-        const baseOpacity = 0.12 + renderDepth * 0.54;
-        const baseStrokeWidth = 0.65 + renderDepth * 0.78;
-        const hoverTarget = getHoverTarget(row, activeIdRef.current);
-        const hoverEnergy = mixNumber(hoverEnergyRefs.current[row.id] ?? 0, hoverTarget, easing);
+        const hoverTarget = getHoverTarget(row, activeNavIndexRef.current);
+        const hoverEnergy = mixNumber(hoverEnergyRefs.current[row.rowIndex] ?? 0, hoverTarget, easing);
         const tonalWeight = Math.round(mixNumber(0, 62, hoverEnergy));
-        const easedOpacity = Math.min(0.82, baseOpacity + hoverEnergy * 0.16);
-        const easedStrokeWidth = Math.min(1.7, baseStrokeWidth + hoverEnergy * 0.18);
+        const easedOpacity = Math.min(0.82, row.baseOpacity + hoverEnergy * 0.16);
+        const easedStrokeWidth = Math.min(1.7, row.baseStrokeWidth + hoverEnergy * 0.18);
         const amplitudeScale = 1 + hoverEnergy * 0.216;
-        const motionScale = DEBUG_ANIMATION ? 5 : 1.35;
-        const path = makeWavePath(timeRef.current, {
-          row,
-          motionScale,
-          amplitudeScale,
-          width,
-          height,
-        });
+        const path = makeWavePath(row, frame, amplitudeScale);
 
         if (DEBUG_ANIMATION && row.rowIndex === 14) {
           const previousPath = debugPreviousPathRef.current;
@@ -197,7 +226,7 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonit
           debugPreviousPathRef.current = path;
         }
 
-        hoverEnergyRefs.current[row.id] = hoverEnergy;
+        hoverEnergyRefs.current[row.rowIndex] = hoverEnergy;
         pathElement.setAttribute('d', path);
         pathElement.setAttribute(
           'stroke',
@@ -215,12 +244,17 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonit
     const renderWaveforms = (frameTime: number) => {
       const elapsed = (frameTime - lastFrameTime) / 1000;
       lastFrameTime = frameTime;
+      renderAccumulator += elapsed * 1000;
 
       if (DEBUG_ANIMATION || !motionQuery.matches) {
         timeRef.current += elapsed;
       }
 
-      renderTerrain(elapsed);
+      if (DEBUG_ANIMATION || renderAccumulator >= WAVE_RENDER_INTERVAL) {
+        renderTerrain(renderAccumulator / 1000);
+        renderAccumulator %= WAVE_RENDER_INTERVAL;
+      }
+
       animationFrame = window.requestAnimationFrame(renderWaveforms);
     };
 
@@ -230,7 +264,7 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonit
     return () => {
       window.cancelAnimationFrame(animationFrame);
     };
-  }, [height, width]);
+  }, []);
 
   return (
     <section
@@ -242,38 +276,28 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonit
       </span>
       <div className="h-full overflow-hidden">
         <svg
-          viewBox={`0 0 ${width} ${height}`}
+          viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
           className="block h-full w-full"
           preserveAspectRatio="none"
           role="img"
           aria-label="Overlapping navigation signal waveforms"
         >
           {terrainRows.map((row) => {
-            const renderDepth = Math.min(1, row.z);
-            const opacity = 0.12 + renderDepth * 0.54;
-            const strokeWidth = 0.65 + renderDepth * 0.78;
-            const motionScale = DEBUG_ANIMATION ? 5 : 1.35;
-            const path = makeWavePath(0, {
-              row,
-              motionScale,
-              amplitudeScale: 1,
-              width,
-              height,
-            });
+            const path = makeWavePath(row, INITIAL_WAVE_FRAME, 1);
 
             return (
               <path
                 key={row.id}
                 ref={(node) => {
-                  pathRefs.current[row.id] = node;
+                  pathRefs.current[row.rowIndex] = node;
                 }}
                 d={path}
                 fill="none"
                 stroke="var(--amber-dim)"
-                strokeWidth={DEBUG_VISUAL ? strokeWidth * 1.6 : strokeWidth}
-                opacity={DEBUG_VISUAL ? Math.min(1, opacity + 0.12) : opacity}
+                strokeWidth={DEBUG_VISUAL ? row.baseStrokeWidth * 1.6 : row.baseStrokeWidth}
+                opacity={DEBUG_VISUAL ? Math.min(1, row.baseOpacity + 0.12) : row.baseOpacity}
                 vectorEffect="non-scaling-stroke"
-                className="monitor-signal-path"
+                className={row.hasGlow ? 'monitor-signal-path' : undefined}
               />
             );
           })}
@@ -291,7 +315,7 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonit
                 <rect
                   x="0"
                   y={zone.y}
-                  width={width}
+                  width={SVG_WIDTH}
                   height={zone.height}
                   fill="transparent"
                   className="cursor-pointer"
