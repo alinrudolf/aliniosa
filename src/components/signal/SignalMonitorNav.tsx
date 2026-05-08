@@ -29,11 +29,20 @@ type NavigationRegion = {
   height: number;
 };
 
-const TERRAIN_ROW_COUNT = 24;
+const TERRAIN_VISIBLE_ROW_COUNT = 24;
+const TERRAIN_LOWER_EXTENSION_ROW_COUNT = 7;
+const TERRAIN_ROW_COUNT = TERRAIN_VISIBLE_ROW_COUNT + TERRAIN_LOWER_EXTENSION_ROW_COUNT;
+const TERRAIN_LOWER_EXTENSION_DEPTH =
+  TERRAIN_LOWER_EXTENSION_ROW_COUNT / (TERRAIN_VISIBLE_ROW_COUNT - 1);
 const TERRAIN_POINT_STEP = 18;
 
 const terrainRows: TerrainRow[] = Array.from({ length: TERRAIN_ROW_COUNT }, (_, rowIndex) => {
-  const z = rowIndex / (TERRAIN_ROW_COUNT - 1);
+  const visibleRowMaxIndex = TERRAIN_VISIBLE_ROW_COUNT - 1;
+  const extensionRowIndex = rowIndex - visibleRowMaxIndex;
+  const z =
+    rowIndex <= visibleRowMaxIndex
+      ? rowIndex / visibleRowMaxIndex
+      : 1 + (extensionRowIndex / TERRAIN_LOWER_EXTENSION_ROW_COUNT) * TERRAIN_LOWER_EXTENSION_DEPTH;
   const navIndex = Math.min(signalNavigation.length - 1, Math.floor(z * signalNavigation.length));
 
   return {
@@ -164,8 +173,9 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonit
           return;
         }
 
-        const baseOpacity = 0.12 + row.z * 0.54;
-        const baseStrokeWidth = 0.65 + row.z * 0.78;
+        const renderDepth = Math.min(1, row.z);
+        const baseOpacity = 0.12 + renderDepth * 0.54;
+        const baseStrokeWidth = 0.65 + renderDepth * 0.78;
         const hoverTarget = getHoverTarget(row, activeIdRef.current);
         const hoverEnergy = mixNumber(hoverEnergyRefs.current[row.id] ?? 0, hoverTarget, easing);
         const tonalWeight = Math.round(mixNumber(0, 62, hoverEnergy));
@@ -239,8 +249,9 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonit
           aria-label="Overlapping navigation signal waveforms"
         >
           {terrainRows.map((row) => {
-            const opacity = 0.12 + row.z * 0.54;
-            const strokeWidth = 0.65 + row.z * 0.78;
+            const renderDepth = Math.min(1, row.z);
+            const opacity = 0.12 + renderDepth * 0.54;
+            const strokeWidth = 0.65 + renderDepth * 0.78;
             const motionScale = DEBUG_ANIMATION ? 5 : 1.35;
             const path = makeWavePath(0, {
               row,
