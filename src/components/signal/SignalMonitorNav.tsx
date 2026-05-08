@@ -101,10 +101,10 @@ export function SignalMonitorNav() {
 
   return (
     <section
-      className="relative w-full overflow-hidden border border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)] text-[color:var(--amber-base)]"
+      className="relative w-full overflow-visible border border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)] text-[color:var(--amber-base)]"
       aria-label="Secondary signal navigation"
     >
-      <span className="absolute -top-px right-8 bg-[color:var(--bg-crt)] px-2 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-[color:var(--amber-core)]">
+      <span className="absolute right-8 top-0 z-10 -translate-y-1/2 bg-[color:var(--bg-crt)] px-2 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-[color:var(--amber-core)]">
         {sectionLabel}
       </span>
       <svg

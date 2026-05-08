@@ -47,3 +47,19 @@ export const signalNavigation: SignalNavigationItem[] = [
   { id: 'LOG', title: 'LOGS', action: 'READ NOTES', href: routes.logs, y: 295, amp: 38, freq: 50, phase: 4.1 },
   { id: 'CNT', title: 'CONTACT', action: 'OPEN CHANNEL', href: routes.contact, y: 325, amp: 24, freq: 70, phase: 5.0 },
 ];
+
+export type BottomNavigationItem = {
+  id: string;
+  label: string;
+  href: string;
+  ariaLabel: string;
+};
+
+export const bottomNavigation: BottomNavigationItem[] = [
+  { id: 'SYS', label: 'SYS', href: routes.system, ariaLabel: 'Navigate to system' },
+  { id: 'WRK', label: 'WRK', href: routes.work, ariaLabel: 'Navigate to work' },
+  { id: 'INS', label: 'INS', href: routes.installations, ariaLabel: 'Navigate to installations' },
+  { id: 'LIB', label: 'LIB', href: routes.library, ariaLabel: 'Navigate to library' },
+  { id: 'LOG', label: 'LOG', href: routes.logs, ariaLabel: 'Navigate to logs' },
+  { id: 'CNT', label: 'CNT', href: routes.contact, ariaLabel: 'Navigate to contact' },
+];
