@@ -11,14 +11,28 @@ export function IdentityBody() {
         {identityContent.label}
       </span>
       <div className="grid h-full min-h-0 grid-cols-2 gap-0 overflow-hidden">
-        <div className="relative min-h-0 overflow-hidden border-b border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)] md:border-b-0 md:border-r">
+        <div className="identity-portrait-signal relative min-h-0 overflow-hidden border-b border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)] md:border-b-0 md:border-r">
           <div className="absolute inset-0 bg-[color:var(--amber-base)] opacity-70 mix-blend-multiply" />
           <img
             src={profileImageUrl}
             alt={identityContent.imageAlt}
-            className="h-full w-full object-cover object-center grayscale contrast-150 brightness-75 opacity-80 mix-blend-screen [filter:grayscale(1)_sepia(1)_saturate(3)_hue-rotate(2deg)_contrast(1.45)_brightness(0.72)]"
+            className="identity-portrait-image h-full w-full object-cover object-center grayscale contrast-150 brightness-75 opacity-80 mix-blend-screen [filter:grayscale(1)_sepia(1)_saturate(3)_hue-rotate(2deg)_contrast(1.45)_brightness(0.72)]"
+          />
+          <img
+            src={profileImageUrl}
+            alt=""
+            aria-hidden="true"
+            className="identity-portrait-edge identity-portrait-edge-a h-full w-full object-cover object-center"
+          />
+          <img
+            src={profileImageUrl}
+            alt=""
+            aria-hidden="true"
+            className="identity-portrait-edge identity-portrait-edge-b h-full w-full object-cover object-center"
           />
           <div className="absolute inset-0 bg-[color:var(--bg-crt)] opacity-30 mix-blend-multiply" />
+          <div className="identity-portrait-dither" aria-hidden="true" />
+          <div className="identity-portrait-scanline" aria-hidden="true" />
         </div>
         <div className="grid min-h-0 content-start gap-6 overflow-hidden p-8 md:p-10 lg:p-12">
           <h2

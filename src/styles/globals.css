@@ -67,6 +67,74 @@ a {
   animation: logoInitializeFlip 620ms cubic-bezier(0.55, 0.08, 0.68, 0.53) 1 both;
 }
 
+.identity-portrait-signal {
+  isolation: isolate;
+}
+
+.identity-portrait-image {
+  animation: identityPortraitPixelHold 5.6s steps(8, end) infinite;
+}
+
+.identity-portrait-edge {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.18;
+  mix-blend-mode: screen;
+  filter: grayscale(1) sepia(1) saturate(3) hue-rotate(2deg) contrast(3.1) brightness(0.58);
+  mask-image:
+    linear-gradient(90deg, transparent 6%, #000 18%, #000 82%, transparent 96%),
+    radial-gradient(ellipse at 55% 42%, transparent 0 34%, #000 44%, transparent 62%);
+  mask-composite: intersect;
+}
+
+.identity-portrait-edge-a {
+  animation: identityPortraitEdgeHoldA 2.8s steps(7, end) infinite;
+}
+
+.identity-portrait-edge-b {
+  opacity: 0.12;
+  mix-blend-mode: color-dodge;
+  animation: identityPortraitEdgeHoldB 3.4s steps(6, end) infinite;
+}
+
+.identity-portrait-dither,
+.identity-portrait-scanline {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.identity-portrait-dither {
+  opacity: 0.18;
+  mix-blend-mode: screen;
+  background-image:
+    radial-gradient(circle, var(--amber-base) 0 0.75px, transparent 0.95px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--amber-base) 8%, transparent) 0 1px, transparent 1px 4px);
+  background-position: 0 0, 0 0;
+  background-size: 4px 4px, 100% 4px;
+  animation: identityPortraitDither 1.35s steps(5, end) infinite;
+}
+
+.identity-portrait-scanline {
+  opacity: 0.28;
+  mix-blend-mode: screen;
+  background: linear-gradient(
+    180deg,
+    transparent 0,
+    transparent 46%,
+    color-mix(in srgb, var(--amber-base) 18%, transparent) 49%,
+    color-mix(in srgb, var(--amber-core) 28%, transparent) 50%,
+    color-mix(in srgb, var(--amber-base) 12%, transparent) 51%,
+    transparent 54%,
+    transparent 100%
+  );
+  background-size: 100% 42%;
+  animation: identityPortraitScanline 6.8s linear infinite;
+}
+
 @keyframes logoInitializeFlip {
   0% {
     transform: rotateY(0deg);
@@ -81,8 +149,99 @@ a {
   }
 }
 
+@keyframes identityPortraitPixelHold {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  18% {
+    transform: translate(0.35px, 0);
+  }
+
+  36% {
+    transform: translate(-0.25px, 0.25px);
+  }
+
+  58% {
+    transform: translate(0, -0.25px);
+  }
+
+  76% {
+    transform: translate(0.25px, 0.2px);
+  }
+}
+
+@keyframes identityPortraitEdgeHoldA {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  22% {
+    transform: translate(1px, 0);
+  }
+
+  45% {
+    transform: translate(-1px, 0.5px);
+  }
+
+  68% {
+    transform: translate(0.5px, -0.5px);
+  }
+}
+
+@keyframes identityPortraitEdgeHoldB {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  30% {
+    transform: translate(-0.75px, 0);
+  }
+
+  60% {
+    transform: translate(0.75px, 0.5px);
+  }
+}
+
+@keyframes identityPortraitDither {
+  0%,
+  100% {
+    background-position: 0 0, 0 0;
+  }
+
+  25% {
+    background-position: 1px -1px, 0 1px;
+  }
+
+  50% {
+    background-position: -1px 1px, 0 2px;
+  }
+
+  75% {
+    background-position: 2px 0, 0 3px;
+  }
+}
+
+@keyframes identityPortraitScanline {
+  from {
+    background-position: 0 -42%;
+  }
+
+  to {
+    background-position: 0 142%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .logo-flip-once {
+  .logo-flip-once,
+  .identity-portrait-image,
+  .identity-portrait-edge-a,
+  .identity-portrait-edge-b,
+  .identity-portrait-dither,
+  .identity-portrait-scanline {
     animation: none;
   }
 }
