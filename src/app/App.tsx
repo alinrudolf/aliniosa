@@ -44,7 +44,7 @@ export function App() {
   return (
     <SiteShell>
       <div className="grid shrink-0 gap-12 lg:grid-cols-[1fr_360px]">
-        <HeaderModule header={siteHeader} />
+        <HeaderModule header={siteHeader} logoAnimationKey={activeHash || 'rest'} />
         <BottomNav
           activeNavId={activeHashNavId}
           onActiveNavChange={setTopNavActiveNavId}

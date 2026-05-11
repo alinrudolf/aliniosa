@@ -30,6 +30,15 @@ export function BottomNav({ activeNavId = null, onActiveNavClick, onActiveNavCha
       <nav aria-label="Primary navigation" className="grid grid-cols-3 gap-4">
         {bottomNavigation.map((item) => {
           const isActive = item.id === activeNavId;
+          const buttonStateClass = isActive
+            ? 'border-[color:var(--amber-base)]'
+            : 'border-[color:var(--amber-base)] hover:border-[color:var(--amber-core)]';
+          const iconStateClass = isActive
+            ? 'bg-[color:var(--amber-base)] text-[color:var(--bg-crt)] group-hover:bg-[color:var(--amber-core)] group-focus-visible:bg-[color:var(--amber-core)]'
+            : 'bg-[color:var(--bg-crt)] text-[color:var(--amber-base)] group-hover:text-[color:var(--amber-core)] group-focus-visible:text-[color:var(--amber-core)]';
+          const labelStateClass = isActive
+            ? 'bg-[color:var(--bg-crt)] text-[color:var(--amber-base)] group-hover:text-[color:var(--amber-core)] group-focus-visible:text-[color:var(--amber-core)]'
+            : 'bg-[color:var(--amber-base)] text-[color:var(--bg-crt)] group-hover:bg-[color:var(--amber-core)] group-focus-visible:bg-[color:var(--amber-core)]';
 
           return (
             <a
@@ -49,25 +58,15 @@ export function BottomNav({ activeNavId = null, onActiveNavClick, onActiveNavCha
               onMouseLeave={() => onActiveNavChange(null)}
               onFocus={() => onActiveNavChange(item.id)}
               onBlur={() => onActiveNavChange(null)}
-              className={`group grid w-fit grid-cols-[auto_auto] overflow-hidden rounded-md border bg-[color:var(--bg-crt)] font-mono transition-[border-color,filter] duration-100 hover:border-[color:var(--amber-core)] hover:[filter:var(--glow-svg)] focus-visible:border-[color:var(--amber-core)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--amber-core)] focus-visible:[filter:var(--glow-svg)] ${
-                isActive ? 'border-[color:var(--amber-core)] [filter:var(--glow-svg)]' : 'border-[color:var(--amber-base)]'
-              }`}
+              className={`group grid w-fit grid-cols-[auto_auto] overflow-hidden rounded-md border bg-[color:var(--bg-crt)] font-mono transition-colors duration-100 focus-visible:border-[color:var(--amber-core)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--amber-core)] ${buttonStateClass}`}
             >
               <span
-                className={`flex items-center justify-center border-r border-[color:var(--bg-crt)] p-2 transition-colors duration-100 group-hover:bg-[color:var(--amber-core)] group-hover:text-[color:var(--bg-crt)] group-focus-visible:bg-[color:var(--amber-core)] group-focus-visible:text-[color:var(--bg-crt)] [&>svg]:block [&>svg]:h-auto [&>svg]:w-4 ${
-                  isActive
-                    ? 'bg-[color:var(--amber-core)] text-[color:var(--bg-crt)]'
-                    : 'bg-[color:var(--bg-crt)] text-[color:var(--amber-base)]'
-                }`}
+                className={`flex items-center justify-center border-r border-[color:var(--bg-crt)] p-2 transition-colors duration-100 [&>svg]:block [&>svg]:h-auto [&>svg]:w-4 ${iconStateClass}`}
                 aria-hidden="true"
                 dangerouslySetInnerHTML={{ __html: icons[item.id] }}
               />
               <span
-                className={`flex items-center justify-center px-4 text-base font-semibold uppercase leading-none tracking-[0.08em] transition-colors duration-100 group-hover:bg-[color:var(--bg-crt)] group-hover:text-[color:var(--amber-core)] group-focus-visible:bg-[color:var(--bg-crt)] group-focus-visible:text-[color:var(--amber-core)] ${
-                  isActive
-                    ? 'bg-[color:var(--bg-crt)] text-[color:var(--amber-core)]'
-                    : 'bg-[color:var(--amber-base)] text-[color:var(--bg-crt)]'
-                }`}
+                className={`flex items-center justify-center px-4 text-base font-semibold uppercase leading-none tracking-[0.08em] transition-colors duration-100 ${labelStateClass}`}
               >
                 {item.label}
               </span>
