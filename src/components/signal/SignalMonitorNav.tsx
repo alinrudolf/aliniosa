@@ -60,6 +60,16 @@ const TERRAIN_ROW_COUNT = TERRAIN_VISIBLE_ROW_COUNT + TERRAIN_LOWER_EXTENSION_RO
 const TERRAIN_LOWER_EXTENSION_DEPTH =
   TERRAIN_LOWER_EXTENSION_ROW_COUNT / (TERRAIN_VISIBLE_ROW_COUNT - 1);
 const TERRAIN_POINT_STEP = 24;
+const DEV_EXPORT_WIDTH = 1920;
+const DEV_EXPORT_FILENAME = 'waveform-export-1920.svg';
+const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
+
+type SvgBounds = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
 
 function createWaveSamples(width: number): WaveSample[] {
   const samples: WaveSample[] = [];
@@ -169,12 +179,166 @@ function makeWavePath(row: TerrainRow, frame: WaveFrame, amplitudeScale: number)
   return path;
 }
 
+function formatSvgNumber(value: number) {
+  return value.toFixed(3).replace(/\.?0+$/, '');
+}
+
+function isEditableKeyTarget(target: EventTarget | null) {
+  if (!(target instanceof HTMLElement)) {
+    return false;
+  }
+
+  return (
+    target.isContentEditable ||
+    target instanceof HTMLInputElement ||
+    target instanceof HTMLTextAreaElement ||
+    target instanceof HTMLSelectElement
+  );
+}
+
+function getRenderedWaveformBounds(svgElement: SVGSVGElement, paths: SVGPathElement[]): SvgBounds | null {
+  const viewBox = svgElement.viewBox.baseVal;
+  const hasViewBox = viewBox.width > 0 && viewBox.height > 0;
+  let minX = Number.POSITIVE_INFINITY;
+  let minY = Number.POSITIVE_INFINITY;
+  let maxX = Number.NEGATIVE_INFINITY;
+  let maxY = Number.NEGATIVE_INFINITY;
+  let maxStrokeWidth = 0;
+
+  paths.forEach((path) => {
+    try {
+      const box = path.getBBox();
+      const computedStyle = window.getComputedStyle(path);
+      const strokeWidth = Number.parseFloat(path.getAttribute('stroke-width') ?? computedStyle.strokeWidth);
+
+      maxStrokeWidth = Math.max(maxStrokeWidth, Number.isFinite(strokeWidth) ? strokeWidth : 0);
+      minX = Math.min(minX, box.x);
+      minY = Math.min(minY, box.y);
+      maxX = Math.max(maxX, box.x + box.width);
+      maxY = Math.max(maxY, box.y + box.height);
+    } catch {
+      // Ignore detached or non-renderable paths during the temporary export.
+    }
+  });
+
+  if (![minX, minY, maxX, maxY].every(Number.isFinite)) {
+    return null;
+  }
+
+  const visualPadding = maxStrokeWidth / 2 + 2;
+  const viewportMinX = hasViewBox ? viewBox.x : 0;
+  const viewportMinY = hasViewBox ? viewBox.y : 0;
+  const viewportMaxX = hasViewBox ? viewBox.x + viewBox.width : maxX + visualPadding;
+  const viewportMaxY = hasViewBox ? viewBox.y + viewBox.height : maxY + visualPadding;
+  const boundedMinX = Math.max(viewportMinX, minX - visualPadding);
+  const boundedMinY = Math.max(viewportMinY, minY - visualPadding);
+  const boundedMaxX = Math.min(viewportMaxX, maxX + visualPadding);
+  const boundedMaxY = Math.min(viewportMaxY, maxY + visualPadding);
+  const width = boundedMaxX - boundedMinX;
+  const height = boundedMaxY - boundedMinY;
+
+  if (width <= 0 || height <= 0) {
+    return null;
+  }
+
+  return {
+    x: boundedMinX,
+    y: boundedMinY,
+    width,
+    height,
+  };
+}
+
+function inlineWaveformPathAttributes(exportPath: SVGPathElement, sourcePath: SVGPathElement) {
+  const computedStyle = window.getComputedStyle(sourcePath);
+  const computedFilter = computedStyle.filter;
+  const sourceStrokeWidth = sourcePath.getAttribute('stroke-width') ?? computedStyle.strokeWidth;
+  const sourceOpacity = sourcePath.getAttribute('opacity') ?? computedStyle.opacity;
+
+  exportPath.removeAttribute('class');
+  exportPath.removeAttribute('style');
+  exportPath.setAttribute('d', sourcePath.getAttribute('d') ?? '');
+  exportPath.setAttribute('fill', sourcePath.getAttribute('fill') ?? computedStyle.fill ?? 'none');
+  exportPath.setAttribute('stroke', computedStyle.stroke || sourcePath.getAttribute('stroke') || 'none');
+  exportPath.setAttribute('stroke-width', sourceStrokeWidth);
+  exportPath.setAttribute('opacity', sourceOpacity);
+  exportPath.setAttribute('vector-effect', sourcePath.getAttribute('vector-effect') ?? 'non-scaling-stroke');
+
+  if (computedStyle.strokeLinecap) {
+    exportPath.setAttribute('stroke-linecap', computedStyle.strokeLinecap);
+  }
+
+  if (computedStyle.strokeLinejoin) {
+    exportPath.setAttribute('stroke-linejoin', computedStyle.strokeLinejoin);
+  }
+
+  if (computedFilter && computedFilter !== 'none') {
+    exportPath.style.filter = computedFilter;
+  }
+}
+
+// TEMP DEV EXPORT TOOL: exports the currently rendered waveform frame as a standalone SVG.
+function exportRenderedWaveformSvg(svgElement: SVGSVGElement) {
+  const sourcePaths = Array.from(svgElement.querySelectorAll('path'));
+  const bounds = getRenderedWaveformBounds(svgElement, sourcePaths);
+
+  if (!bounds) {
+    return;
+  }
+
+  const exportHeight = (DEV_EXPORT_WIDTH * bounds.height) / bounds.width;
+  const exportSvg = svgElement.cloneNode(true) as SVGSVGElement;
+  const exportPaths = Array.from(exportSvg.querySelectorAll('path'));
+
+  Array.from(exportSvg.querySelectorAll('a, rect')).forEach((element) => element.remove());
+  exportSvg.removeAttribute('class');
+  exportSvg.removeAttribute('role');
+  exportSvg.removeAttribute('aria-label');
+  exportSvg.setAttribute('xmlns', SVG_NAMESPACE);
+  exportSvg.setAttribute('width', String(DEV_EXPORT_WIDTH));
+  exportSvg.setAttribute('height', formatSvgNumber(exportHeight));
+  exportSvg.setAttribute('preserveAspectRatio', 'xMinYMin meet');
+  exportSvg.setAttribute(
+    'viewBox',
+    `${formatSvgNumber(bounds.x)} ${formatSvgNumber(bounds.y)} ${formatSvgNumber(bounds.width)} ${formatSvgNumber(
+      bounds.height,
+    )}`,
+  );
+
+  exportPaths.forEach((exportPath, index) => {
+    const sourcePath = sourcePaths[index];
+
+    if (!sourcePath) {
+      exportPath.remove();
+      return;
+    }
+
+    inlineWaveformPathAttributes(exportPath, sourcePath);
+  });
+
+  const serializedSvg = new XMLSerializer().serializeToString(exportSvg);
+  const svgBlob = new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n${serializedSvg}\n`], {
+    type: 'image/svg+xml;charset=utf-8',
+  });
+  const objectUrl = URL.createObjectURL(svgBlob);
+  const downloadLink = document.createElement('a');
+
+  downloadLink.href = objectUrl;
+  downloadLink.download = DEV_EXPORT_FILENAME;
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  downloadLink.remove();
+  window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
+}
+
 type SignalMonitorNavProps = {
   activeNavId: string | null;
   onActiveNavChange: (id: string | null) => void;
+  embedded?: boolean;
 };
 
-export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonitorNavProps) {
+export function SignalMonitorNav({ activeNavId, onActiveNavChange, embedded = false }: SignalMonitorNavProps) {
+  const svgRef = useRef<SVGSVGElement | null>(null);
   const activeNavIndexRef = useRef(-1);
   const pathRefs = useRef<Array<SVGPathElement | null>>([]);
   const hoverEnergyRefs = useRef<number[]>([]);
@@ -266,16 +430,52 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange }: SignalMonit
     };
   }, []);
 
+  useEffect(() => {
+    const handleDevExportKeyDown = (event: KeyboardEvent) => {
+      if (
+        event.key.toLowerCase() !== 'e' ||
+        event.repeat ||
+        event.altKey ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.shiftKey ||
+        isEditableKeyTarget(event.target)
+      ) {
+        return;
+      }
+
+      const svgElement = svgRef.current;
+
+      if (!svgElement) {
+        return;
+      }
+
+      event.preventDefault();
+      exportRenderedWaveformSvg(svgElement);
+    };
+
+    window.addEventListener('keydown', handleDevExportKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleDevExportKeyDown);
+    };
+  }, []);
+
   return (
     <section
-      className="relative h-full min-h-0 w-full overflow-visible border border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)] text-[color:var(--amber-base)]"
+      className={`relative h-full min-h-0 w-full overflow-visible bg-[color:var(--bg-crt)] text-[color:var(--amber-base)] ${
+        embedded ? '' : 'border border-[color:var(--amber-dim)]'
+      }`}
       aria-label="Secondary signal navigation"
     >
-      <span className="absolute right-8 top-0 z-10 -translate-y-1/2 bg-[color:var(--bg-crt)] px-2 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-[color:var(--amber-core)]">
-        {sectionLabel}
-      </span>
+      {embedded ? null : (
+        <span className="absolute right-8 top-0 z-10 -translate-y-1/2 bg-[color:var(--bg-crt)] px-2 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-[color:var(--amber-core)]">
+          {sectionLabel}
+        </span>
+      )}
       <div className="h-full overflow-hidden">
         <svg
+          ref={svgRef}
           viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
           className="block h-full w-full"
           preserveAspectRatio="none"

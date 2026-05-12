@@ -6,8 +6,8 @@ type SiteShellProps = {
 
 export function SiteShell({ children }: SiteShellProps) {
   return (
-    <div className="h-dvh overflow-hidden bg-[color:var(--bg-crt)] p-12 text-[color:var(--amber-base)]">
-      <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-12">
+    <div className="h-dvh overflow-hidden bg-[color:var(--bg-crt)] px-[80px] py-10 text-[color:var(--amber-base)]">
+      <div className="flex h-full min-h-0 w-full flex-col overflow-visible">
         {children}
       </div>
     </div>

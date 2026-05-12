@@ -1,19 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import cntIcon from '../../assets/icons/CNT.svg?raw';
-import insIcon from '../../assets/icons/INS.svg?raw';
-import libIcon from '../../assets/icons/LIB.svg?raw';
-import logIcon from '../../assets/icons/LOG.svg?raw';
-import sysIcon from '../../assets/icons/SYS.svg?raw';
-import wrkIcon from '../../assets/icons/WRK.svg?raw';
-import { bottomNavigation, navPanelLabel } from '../../data/navigation';
+import { bottomNavigation } from '../../data/navigation';
 
-const icons: Record<string, string> = {
-  SYS: sysIcon,
-  WRK: wrkIcon,
-  INS: insIcon,
-  LIB: libIcon,
-  LOG: logIcon,
-  CNT: cntIcon,
+const navigationDisplay: Record<string, { index: string; title: string; subtitle: string }> = {
+  SYS: { index: '01', title: 'IDENTITY', subtitle: 'Human Component' },
+  WRK: { index: '02', title: 'WORK', subtitle: 'Selected Projects' },
+  INS: { index: '03', title: 'INSTALLATIONS', subtitle: 'Physical & Digital' },
+  LIB: { index: '04', title: 'LIBRARY', subtitle: 'Media Recommendations' },
+  LOG: { index: '05', title: 'LOGS', subtitle: 'Notes & Writings' },
+  CNT: { index: '06', title: 'CONTACT', subtitle: 'Human component' },
 };
 
 const BACKGROUND_AUDIO_SRC = '/audio/bg-audio.mp3';
@@ -70,45 +64,44 @@ export function BottomNav({ activeNavId = null, onActiveNavClick, onActiveNavCha
   };
 
   return (
-    <section className="relative grid h-40 shrink-0 place-items-center overflow-visible border border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)] p-6">
-      <span className="absolute right-8 top-0 -translate-y-1/2 bg-[color:var(--bg-crt)] px-2 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-[color:var(--amber-core)]">
-        {navPanelLabel}
-      </span>
-      <button
-        type="button"
-        aria-label={isAudioEnabled ? 'Disable background audio' : 'Enable background audio'}
-        aria-pressed={isAudioEnabled}
-        onClick={toggleBackgroundAudio}
-        className="absolute left-8 top-0 grid h-8 w-8 -translate-y-1/2 place-items-center bg-[color:var(--bg-crt)] px-2 text-[color:var(--amber-base)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--amber-core)]"
-      >
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-auto w-4">
-          {isAudioEnabled ? (
-            <>
-              <path d="M22 12H20" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
-              <path d="M18 16V16.01" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
-              <path d="M20 6V6.01" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
-              <path d="M18 8V8.01" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
-              <path d="M20 18V18.01" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
-            </>
-          ) : null}
-          <path d="M8 6V6.01" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
-          <path d="M8 18V18.01" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
-          <path d="M10 4H13V20H10" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
-          <path d="M6 8H2V16H6" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
-        </svg>
-      </button>
-      <nav aria-label="Primary navigation" className="grid grid-cols-3 gap-4">
-        {bottomNavigation.map((item) => {
+    <section className="h-[154px] shrink-0 overflow-hidden border-t border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)]">
+      <div className="flex h-[46px] items-center justify-between border-b border-[color:var(--amber-dim)] px-6">
+        <span className="font-mono text-[0.68rem] uppercase tracking-[0.14em] text-[color:var(--amber-core)]">
+          [NAVIGATION]
+        </span>
+        <button
+          type="button"
+          aria-label={isAudioEnabled ? 'Disable background audio' : 'Enable background audio'}
+          aria-pressed={isAudioEnabled}
+          onClick={toggleBackgroundAudio}
+          className="grid h-8 w-8 place-items-center bg-[color:var(--bg-crt)] text-[color:var(--amber-base)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--amber-core)]"
+        >
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-auto w-4">
+            {isAudioEnabled ? (
+              <>
+                <path d="M22 12H20" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+                <path d="M18 16V16.01" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+                <path d="M20 6V6.01" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+                <path d="M18 8V8.01" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+                <path d="M20 18V18.01" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+              </>
+            ) : null}
+            <path d="M8 6V6.01" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+            <path d="M8 18V18.01" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+            <path d="M10 4H13V20H10" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+            <path d="M6 8H2V16H6" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square" />
+          </svg>
+        </button>
+      </div>
+      <nav aria-label="Primary navigation" className="grid h-[108px] grid-cols-6">
+        {bottomNavigation.map((item, index) => {
           const isActive = item.id === activeNavId;
-          const buttonStateClass = isActive
-            ? 'border-[color:var(--amber-base)]'
-            : 'border-[color:var(--amber-base)] hover:border-[color:var(--amber-core)]';
-          const iconStateClass = isActive
-            ? 'bg-[color:var(--amber-base)] text-[color:var(--bg-crt)] group-hover:bg-[color:var(--amber-core)] group-focus-visible:bg-[color:var(--amber-core)]'
-            : 'bg-[color:var(--bg-crt)] text-[color:var(--amber-base)] group-hover:text-[color:var(--amber-core)] group-focus-visible:text-[color:var(--amber-core)]';
-          const labelStateClass = isActive
-            ? 'bg-[color:var(--bg-crt)] text-[color:var(--amber-base)] group-hover:text-[color:var(--amber-core)] group-focus-visible:text-[color:var(--amber-core)]'
-            : 'bg-[color:var(--amber-base)] text-[color:var(--bg-crt)] group-hover:bg-[color:var(--amber-core)] group-focus-visible:bg-[color:var(--amber-core)]';
+          const display = navigationDisplay[item.id];
+          const dividerClass =
+            index === 0
+              ? ''
+              : 'border-l border-[color:var(--amber-dim)] before:absolute before:left-[-12px] before:top-1/2 before:h-0.5 before:w-6 before:-translate-y-1/2 before:bg-[color:var(--amber-dim)] before:content-[""]';
+          const buttonStateClass = isActive ? 'outline outline-1 -outline-offset-1 outline-[color:var(--amber-base)]' : '';
 
           return (
             <a
@@ -128,16 +121,12 @@ export function BottomNav({ activeNavId = null, onActiveNavClick, onActiveNavCha
               onMouseLeave={() => onActiveNavChange(null)}
               onFocus={() => onActiveNavChange(item.id)}
               onBlur={() => onActiveNavChange(null)}
-              className={`group grid w-fit grid-cols-[auto_auto] overflow-hidden rounded-md border bg-[color:var(--bg-crt)] font-mono transition-colors duration-100 focus-visible:border-[color:var(--amber-core)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--amber-core)] ${buttonStateClass}`}
+              className={`relative grid h-full min-w-0 content-start gap-2 bg-[color:var(--bg-crt)] px-6 py-4 font-mono text-[color:var(--amber-base)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--amber-core)] ${dividerClass} ${buttonStateClass}`}
             >
-              <span
-                className={`flex items-center justify-center border-r border-[color:var(--bg-crt)] p-2 transition-colors duration-100 [&>svg]:block [&>svg]:h-auto [&>svg]:w-4 ${iconStateClass}`}
-                aria-hidden="true"
-                dangerouslySetInnerHTML={{ __html: icons[item.id] }}
-              />
-              <span
-                className={`flex items-center justify-center px-4 text-base font-semibold uppercase leading-none tracking-[0.08em] transition-colors duration-100 ${labelStateClass}`}
-              >
+              <span className="whitespace-nowrap text-base font-semibold uppercase leading-none">{display.index}</span>
+              <span className="whitespace-nowrap text-base font-semibold uppercase leading-none">{display.title}</span>
+              <span className="whitespace-nowrap text-sm font-normal leading-none">{display.subtitle}</span>
+              <span className="sr-only">
                 {item.label}
               </span>
             </a>
