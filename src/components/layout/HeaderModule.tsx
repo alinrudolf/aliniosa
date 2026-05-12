@@ -20,7 +20,7 @@ export function HeaderModule({ header, logoAnimationKey = 'initial', embedded = 
           {header.section}
         </span>
       )}
-      <div className="logo-flip-stage flex items-center justify-center border-b border-[color:var(--amber-dim)] p-6 md:border-b-0 md:border-r">
+      <div className="logo-flip-stage flex items-center justify-center overflow-hidden border-b border-[color:var(--amber-dim)] p-6 [box-shadow:none] [contain:paint] md:border-b-0 md:border-r">
         <img key={logoAnimationKey} src={logoUrl} alt={header.logoAlt} className="logo-flip-once h-24 w-24 object-contain" />
       </div>
       <div className={contentClass}>

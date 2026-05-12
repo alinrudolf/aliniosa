@@ -50,7 +50,7 @@ export function BottomNav({ activeNavId = null, onActiveNavClick, onActiveNavCha
 
     audioRef.current = audio;
     audio.loop = true;
-    audio.volume = 0.1;
+    audio.volume = 0.15;
 
     try {
       await audio.play();
