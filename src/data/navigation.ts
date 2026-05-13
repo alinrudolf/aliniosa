@@ -11,7 +11,7 @@ export const siteHeader = {
   section: '[HEADER]',
   label: 'personal system interface',
   title: 'ALIN IOSA',
-  summary: 'Product manager and retro-futuristic hardware builder',
+  summary: 'Product manager / hardware builder',
   logoAlt: 'Alin Iosa amber mark',
 };
 

@@ -3,6 +3,7 @@
 @theme {
   --font-mono: var(--font-family-mono);
   --font-sans: var(--font-family-sans);
+  --font-vga: var(--font-family-vga);
 }
 
 * {
@@ -71,6 +72,146 @@ a {
   transform-style: preserve-3d;
   backface-visibility: hidden;
   animation: logoInitializeFlip 620ms cubic-bezier(0.55, 0.08, 0.68, 0.53) 1 both;
+}
+
+.header-logo-mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: var(--amber-base);
+}
+
+.header-logo-mark path {
+  fill: currentColor;
+}
+
+.bottom-nav-item {
+  --nav-hover-bg: rgba(255, 176, 0, 0.095);
+  --nav-active-bg: rgba(255, 176, 0, 0.17);
+  --nav-hover-glow: inset 0 0 0 1px rgba(255, 201, 74, 0.24), inset 0 0 14px rgba(255, 176, 0, 0.18);
+  --nav-active-glow: inset 0 0 0 1px rgba(255, 201, 74, 0.36), inset 0 0 18px rgba(255, 176, 0, 0.28);
+  isolation: isolate;
+}
+
+.bottom-nav-state-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+.bottom-nav-hover-layer {
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 176, 0, 0.08) 0,
+      rgba(255, 176, 0, 0.08) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    repeating-linear-gradient(
+      to right,
+      rgba(255, 201, 74, 0.018) 0,
+      rgba(255, 201, 74, 0.018) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    var(--nav-hover-bg);
+  box-shadow: var(--nav-hover-glow);
+}
+
+.bottom-nav-active-layer {
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 201, 74, 0.1) 0,
+      rgba(255, 201, 74, 0.1) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      to right,
+      rgba(255, 176, 0, 0.028) 0,
+      rgba(255, 176, 0, 0.028) 1px,
+      transparent 1px,
+      transparent 5px
+    ),
+    var(--nav-active-bg);
+  box-shadow: var(--nav-active-glow);
+}
+
+.bottom-nav-copy {
+  transition: color 150ms ease-out;
+}
+
+.bottom-nav-item:hover .bottom-nav-hover-layer,
+.bottom-nav-item:focus-visible .bottom-nav-hover-layer,
+.bottom-nav-item-active .bottom-nav-active-layer {
+  opacity: 1;
+}
+
+.bottom-nav-item:hover .bottom-nav-copy,
+.bottom-nav-item:focus-visible .bottom-nav-copy,
+.bottom-nav-item-active .bottom-nav-copy {
+  color: var(--amber-core);
+}
+
+.terminal-text-swap {
+  position: relative;
+  display: inline-grid;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+.terminal-text-swap-sizer {
+  visibility: hidden;
+  grid-area: 1 / 1;
+}
+
+.terminal-text-swap-output {
+  grid-area: 1 / 1;
+}
+
+.terminal-text-swap::after {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 38%;
+  height: 1px;
+  pointer-events: none;
+  content: "";
+  background: currentColor;
+  opacity: 0;
+  transform: translateX(-120%);
+  box-shadow: 0 0 4px currentColor;
+}
+
+.terminal-text-swap-active::after {
+  animation: terminalTextSwapStreak 220ms ease-out 1;
+}
+
+@keyframes terminalTextSwapStreak {
+  0% {
+    opacity: 0;
+    transform: translateX(-120%);
+  }
+
+  25% {
+    opacity: 0.42;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(280%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal-text-swap-active::after {
+    animation: none;
+  }
 }
 
 .identity-portrait-signal {

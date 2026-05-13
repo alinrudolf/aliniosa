@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { bottomNavigation } from '../../data/navigation';
+import { TerminalTextSwap } from './TerminalTextSwap';
 
 const navigationDisplay: Record<string, { index: string; title: string; subtitle: string }> = {
   SYS: { index: '01', title: 'IDENTITY', subtitle: 'Human Component' },
@@ -8,6 +9,15 @@ const navigationDisplay: Record<string, { index: string; title: string; subtitle
   LIB: { index: '04', title: 'LIBRARY', subtitle: 'Media Recommendations' },
   LOG: { index: '05', title: 'LOGS', subtitle: 'Notes & Writings' },
   CNT: { index: '06', title: 'CONTACT', subtitle: 'Human component' },
+};
+
+const navigationHoverLabels: Record<string, string> = {
+  SYS: '[IDN]',
+  WRK: '[WRK]',
+  INS: '[INS]',
+  LIB: '[LIB]',
+  LOG: '[LOG]',
+  CNT: '[CON]',
 };
 
 const BACKGROUND_AUDIO_SRC = '/audio/bg-audio.mp3';
@@ -23,13 +33,15 @@ function storeBackgroundAudioPreference(isEnabled: boolean) {
 
 type BottomNavProps = {
   activeNavId?: string | null;
+  hoverNavId?: string | null;
   onActiveNavClick: () => void;
   onActiveNavChange: (id: string | null) => void;
 };
 
-export function BottomNav({ activeNavId = null, onActiveNavClick, onActiveNavChange }: BottomNavProps) {
+export function BottomNav({ activeNavId = null, hoverNavId = null, onActiveNavClick, onActiveNavChange }: BottomNavProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isAudioEnabled, setIsAudioEnabled] = useState(false);
+  const navigationLabel = hoverNavId ? navigationHoverLabels[hoverNavId] ?? '[NAVIGATION]' : '[NAVIGATION]';
 
   useEffect(() => {
     return () => {
@@ -64,10 +76,10 @@ export function BottomNav({ activeNavId = null, onActiveNavClick, onActiveNavCha
   };
 
   return (
-    <section className="h-[154px] shrink-0 overflow-hidden border-t border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)]">
+    <section className="shrink-0 overflow-hidden border-t border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)]">
       <div className="flex h-[46px] items-center justify-between border-b border-[color:var(--amber-dim)] px-6">
         <span className="font-mono text-[0.68rem] uppercase tracking-[0.14em] text-[color:var(--amber-core)]">
-          [NAVIGATION]
+          <TerminalTextSwap value={navigationLabel} />
         </span>
         <button
           type="button"
@@ -93,15 +105,15 @@ export function BottomNav({ activeNavId = null, onActiveNavClick, onActiveNavCha
           </svg>
         </button>
       </div>
-      <nav aria-label="Primary navigation" className="grid h-[108px] grid-cols-6">
+      <nav aria-label="Primary navigation" className="grid grid-cols-6">
         {bottomNavigation.map((item, index) => {
           const isActive = item.id === activeNavId;
           const display = navigationDisplay[item.id];
           const dividerClass =
             index === 0
               ? ''
-              : 'border-l border-[color:var(--amber-dim)] before:absolute before:left-[-12px] before:top-1/2 before:h-0.5 before:w-6 before:-translate-y-1/2 before:bg-[color:var(--amber-dim)] before:content-[""]';
-          const buttonStateClass = isActive ? 'outline outline-1 -outline-offset-1 outline-[color:var(--amber-base)]' : '';
+              : 'border-l border-[color:var(--amber-dim)] before:absolute before:left-[-12px] before:top-1/2 before:z-20 before:h-0.5 before:w-6 before:-translate-y-1/2 before:bg-[color:var(--amber-dim)] before:content-[""]';
+          const buttonStateClass = isActive ? 'bottom-nav-item-active outline outline-1 -outline-offset-1 outline-[color:var(--amber-base)]' : '';
 
           return (
             <a
@@ -121,11 +133,13 @@ export function BottomNav({ activeNavId = null, onActiveNavClick, onActiveNavCha
               onMouseLeave={() => onActiveNavChange(null)}
               onFocus={() => onActiveNavChange(item.id)}
               onBlur={() => onActiveNavChange(null)}
-              className={`relative grid h-full min-w-0 content-start gap-2 bg-[color:var(--bg-crt)] px-6 py-4 font-mono text-[color:var(--amber-base)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--amber-core)] ${dividerClass} ${buttonStateClass}`}
+              className={`bottom-nav-item relative grid min-w-0 content-start gap-2 bg-[color:var(--bg-crt)] px-6 py-4 font-mono text-[color:var(--amber-base)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--amber-core)] ${dividerClass} ${buttonStateClass}`}
             >
-              <span className="whitespace-nowrap text-base font-semibold uppercase leading-none">{display.index}</span>
-              <span className="whitespace-nowrap text-base font-semibold uppercase leading-none">{display.title}</span>
-              <span className="whitespace-nowrap text-sm font-normal leading-none">{display.subtitle}</span>
+              <span className="bottom-nav-state-layer bottom-nav-hover-layer" aria-hidden="true" />
+              <span className="bottom-nav-state-layer bottom-nav-active-layer" aria-hidden="true" />
+              <span className="relative z-10 whitespace-nowrap text-base font-semibold uppercase leading-none text-[color:var(--amber-core)]">{display.index}</span>
+              <span className="bottom-nav-copy relative z-10 whitespace-nowrap text-base font-semibold uppercase leading-none">{display.title}</span>
+              <span className="bottom-nav-copy relative z-10 whitespace-nowrap text-sm font-normal leading-none">{display.subtitle}</span>
               <span className="sr-only">
                 {item.label}
               </span>
