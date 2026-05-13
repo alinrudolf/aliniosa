@@ -78,7 +78,7 @@ export function BottomNav({ activeNavId = null, hoverNavId = null, onActiveNavCl
   return (
     <section className="shrink-0 overflow-hidden border-t border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)]">
       <div className="flex h-[46px] items-center justify-between border-b border-[color:var(--amber-dim)] px-6">
-        <span className="font-mono text-[0.68rem] uppercase tracking-[0.14em] text-[color:var(--amber-core)]">
+        <span className="system-label-type text-[0.68rem] text-[color:var(--amber-core)]">
           <TerminalTextSwap value={navigationLabel} />
         </span>
         <button

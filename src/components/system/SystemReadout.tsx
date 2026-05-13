@@ -31,14 +31,15 @@ export function SystemReadout() {
 
   return (
     <aside
-      className="font-vga pointer-events-none grid w-[640px] grid-cols-[300px_300px] justify-between text-[color:var(--amber-base)]"
+      className="system-label-type pointer-events-none grid w-[640px] grid-cols-[300px_300px] justify-between text-[color:var(--amber-base)]"
       aria-label="System readout"
     >
       <section className="grid gap-3">
-        <h2 className="border-b border-[color:var(--amber-base)] pb-2 text-[16px] font-normal leading-none">
-          {systemReadout.status.label}
-        </h2>
-        <dl className="grid gap-2 text-[14px] font-normal leading-none">
+        <div className="grid gap-2 text-[0.68rem] font-normal">
+          <h2>{systemReadout.status.label}</h2>
+          <span className="crt-divider-line h-px w-full text-[color:var(--amber-base)]" aria-hidden="true" />
+        </div>
+        <dl className="grid gap-2 text-[0.68rem] font-normal">
           <div>
             <dt className="sr-only">Location</dt>
             <dd>LOCATION: {systemReadout.status.location}</dd>
@@ -50,10 +51,11 @@ export function SystemReadout() {
         </dl>
       </section>
       <section className="grid gap-3">
-        <h2 className="border-b border-[color:var(--amber-base)] pb-2 text-[16px] font-normal leading-none">
-          {systemReadout.node.label}
-        </h2>
-        <dl className="grid gap-2 text-[14px] font-normal leading-none">
+        <div className="grid gap-2 text-[0.68rem] font-normal">
+          <h2>{systemReadout.node.label}</h2>
+          <span className="crt-divider-line h-px w-full text-[color:var(--amber-base)]" aria-hidden="true" />
+        </div>
+        <dl className="grid gap-2 text-[0.68rem] font-normal">
           <div>
             <dt className="sr-only">Node</dt>
             <dd>{systemReadout.node.name}</dd>

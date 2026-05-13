@@ -19,6 +19,7 @@ type TerrainRow = {
   primaryOffset: number;
   secondaryOffset: number;
   tertiaryOffset: number;
+  detailOffset: number;
   hasGlow: boolean;
 };
 
@@ -42,6 +43,7 @@ type WaveSample = {
   primaryX: number;
   secondaryX: number;
   tertiaryX: number;
+  detailX: number;
   edgeFalloff: number;
 };
 
@@ -60,6 +62,10 @@ const TERRAIN_ROW_COUNT = TERRAIN_VISIBLE_ROW_COUNT + TERRAIN_LOWER_EXTENSION_RO
 const TERRAIN_LOWER_EXTENSION_DEPTH =
   TERRAIN_LOWER_EXTENSION_ROW_COUNT / (TERRAIN_VISIBLE_ROW_COUNT - 1);
 const TERRAIN_POINT_STEP = 24;
+const TERRAIN_PRIMARY_FREQUENCY = 0.0105;
+const TERRAIN_SECONDARY_FREQUENCY = 0.019;
+const TERRAIN_TERTIARY_FREQUENCY = 0.0068;
+const TERRAIN_DETAIL_FREQUENCY = 0.029;
 const DEV_EXPORT_WIDTH = 1920;
 const DEV_EXPORT_FILENAME = 'waveform-export-1920.svg';
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
@@ -77,9 +83,10 @@ function createWaveSamples(width: number): WaveSample[] {
   const pushSample = (x: number) => {
     samples.push({
       xLabel: x.toFixed(1),
-      primaryX: x * 0.0072,
-      secondaryX: x * 0.013,
-      tertiaryX: x * 0.0048,
+      primaryX: x * TERRAIN_PRIMARY_FREQUENCY,
+      secondaryX: x * TERRAIN_SECONDARY_FREQUENCY,
+      tertiaryX: x * TERRAIN_TERTIARY_FREQUENCY,
+      detailX: x * TERRAIN_DETAIL_FREQUENCY,
       edgeFalloff: 0.58 + Math.sin((x / width) * Math.PI) * 0.42,
     });
   };
@@ -117,13 +124,14 @@ const terrainRows: TerrainRow[] = Array.from({ length: TERRAIN_ROW_COUNT }, (_, 
     navIndex,
     renderDepth,
     baseY: horizonY + depthCurve * depthSpan,
-    baseAmplitude: (16 + z ** 1.35 * 54) * debugScale,
+    baseAmplitude: (18 + z ** 1.35 * 56) * debugScale,
     perspectiveScale: 0.52 + z * 0.48,
     baseOpacity: 0.12 + renderDepth * 0.54,
     baseStrokeWidth: 0.65 + renderDepth * 0.78,
     primaryOffset: z * 5.8 + 0.4,
-    secondaryOffset: -z * 7.1 + 1.7,
-    tertiaryOffset: z * 420 * 0.0048 + 2.6,
+    secondaryOffset: -z * 5.4 + 1.7,
+    tertiaryOffset: z * 420 * TERRAIN_TERTIARY_FREQUENCY + 2.6,
+    detailOffset: z * 3.2 + 0.9,
     hasGlow: rowIndex % 3 === 0 || rowIndex >= TERRAIN_VISIBLE_ROW_COUNT - 2,
   };
 });
@@ -168,9 +176,10 @@ function makeWavePath(row: TerrainRow, frame: WaveFrame, amplitudeScale: number)
   for (let index = 0; index < waveSamples.length; index += 1) {
     const sample = waveSamples[index];
     const heightValue =
-      Math.sin(sample.primaryX + row.primaryOffset + frame.primaryTime) * 0.52 +
-      Math.sin(sample.secondaryX + row.secondaryOffset + frame.secondaryTime) * 0.3 +
-      Math.sin(sample.tertiaryX + row.tertiaryOffset + frame.tertiaryTime) * 0.18;
+      Math.sin(sample.primaryX + row.primaryOffset + frame.primaryTime) * 0.44 +
+      Math.sin(sample.secondaryX + row.secondaryOffset + frame.secondaryTime) * 0.31 +
+      Math.sin(sample.tertiaryX + row.tertiaryOffset + frame.tertiaryTime) * 0.15 +
+      Math.sin(sample.detailX + row.detailOffset + frame.secondaryTime * 0.72) * 0.1;
     const y = row.baseY - heightValue * amplitude * sample.edgeFalloff;
 
     path += `${index === 0 ? 'M' : ' L'} ${sample.xLabel},${y.toFixed(1)}`;

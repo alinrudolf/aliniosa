@@ -45,7 +45,7 @@ export function App() {
   return (
     <SiteShell>
       <section className="relative flex h-full min-h-0 w-full flex-col overflow-visible border border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)] text-[color:var(--amber-base)]">
-        <span className="absolute right-8 top-0 z-30 -translate-y-1/2 bg-[color:var(--bg-crt)] px-2 font-mono text-[0.68rem] uppercase leading-none tracking-[0.14em] text-[color:var(--amber-core)]">
+        <span className="system-label-type absolute right-8 top-0 z-30 -translate-y-1/2 bg-[color:var(--bg-crt)] px-2 text-[0.68rem] text-[color:var(--amber-core)]">
           {signalMonitorLabel}
         </span>
         <div className="relative h-[255px] shrink-0 overflow-hidden pt-6">

@@ -21,9 +21,9 @@ export function HeaderModule({ header, logoAnimationKey = 'initial', embedded = 
     : 'relative grid h-40 shrink-0 border border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)] md:grid-cols-[160px_1fr]';
   const identityGroupClass = embedded ? 'ml-6 inline-flex h-auto items-center p-2' : 'contents';
   const logoFrameClass = embedded
-    ? 'logo-flip-stage flex items-center justify-center border-r border-[color:var(--amber-dim)] pr-6 [box-shadow:none]'
+    ? 'logo-flip-stage flex items-center justify-center text-[color:var(--amber-dim)]'
     : 'logo-flip-stage flex items-center justify-center overflow-hidden border-[color:var(--amber-dim)] p-6 [box-shadow:none] [contain:paint] max-md:border-b md:border-r';
-  const contentClass = embedded ? 'grid content-center gap-2 pl-10 pr-6' : 'grid content-center gap-2 p-6';
+  const contentClass = embedded ? 'grid content-center gap-2 pl-6 pr-6' : 'grid content-center gap-2 p-6';
 
   return (
     <header className={headerFrameClass}>
@@ -41,6 +41,7 @@ export function HeaderModule({ header, logoAnimationKey = 'initial', embedded = 
             aria-label={header.logoAlt}
             dangerouslySetInnerHTML={{ __html: inlineLogoSvg }}
           />
+          {embedded ? <span className="crt-divider-line ml-6 h-16 w-px" aria-hidden="true" /> : null}
         </div>
         <div className={contentClass}>
           <p className="sr-only">{header.label}</p>
