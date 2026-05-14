@@ -144,7 +144,7 @@ export function App() {
           {signalMonitorLabel}
         </span>
         <div className={`relative shrink-0 overflow-hidden ${isSystemActive ? 'h-32 py-6' : 'h-[255px] pt-6'}`}>
-          <HeaderModule header={siteHeader} logoAnimationKey={activeHash || 'rest'} embedded compact={isSystemActive} />
+          <HeaderModule header={siteHeader} embedded compact={isSystemActive} />
           <div className="absolute right-10 top-9">
             <SystemReadout />
           </div>

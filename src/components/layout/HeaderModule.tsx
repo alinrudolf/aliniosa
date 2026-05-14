@@ -11,12 +11,11 @@ const inlineLogoSvg = logoSvg
 
 type HeaderModuleProps = {
   header: SiteHeader;
-  logoAnimationKey?: string;
   embedded?: boolean;
   compact?: boolean;
 };
 
-export function HeaderModule({ header, logoAnimationKey = 'initial', embedded = false, compact = false }: HeaderModuleProps) {
+export function HeaderModule({ header, embedded = false, compact = false }: HeaderModuleProps) {
   const headerFrameClass = embedded
     ? `relative flex shrink-0 items-start bg-[color:var(--bg-crt)] ${compact ? '' : 'h-[140px]'}`
     : 'relative grid h-40 shrink-0 border border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)] md:grid-cols-[160px_1fr]';
@@ -36,8 +35,7 @@ export function HeaderModule({ header, logoAnimationKey = 'initial', embedded = 
       <div className={identityGroupClass}>
         <div className={logoFrameClass}>
           <span
-            key={logoAnimationKey}
-            className="header-logo-mark logo-flip-once block h-16 w-16 text-[color:var(--amber-base)]"
+            className="header-logo-mark block h-16 w-16 text-[color:var(--amber-base)]"
             role="img"
             aria-label={header.logoAlt}
             dangerouslySetInnerHTML={{ __html: inlineLogoSvg }}

@@ -137,13 +137,13 @@ function IdentityInfoPanel() {
             <IdentityStatusColumn items={identityContent.statusLeft} />
             <IdentityStatusColumn items={identityContent.statusRight} />
           </div>
+          <WaveformAnalyzer />
           <div className="identity-copy">
             {identityContent.paragraphs.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
           </div>
         </div>
-        <WaveformAnalyzer />
       </div>
     </section>
   );

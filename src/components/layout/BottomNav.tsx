@@ -98,8 +98,12 @@ export function BottomNav({
           aria-label={isAudioEnabled ? 'Disable background audio' : 'Enable background audio'}
           aria-pressed={isAudioEnabled}
           onClick={toggleBackgroundAudio}
-          className="grid h-8 w-8 place-items-center bg-[color:var(--bg-crt)] text-[color:var(--amber-base)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--amber-core)]"
+          className="grid h-8 w-8 grid-cols-[8px_16px] items-center justify-end gap-2 bg-[color:var(--bg-crt)] text-[color:var(--amber-base)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--amber-core)]"
         >
+          <span
+            className={`audio-status-dot ${isAudioEnabled ? 'audio-status-dot-active' : ''}`}
+            aria-hidden="true"
+          />
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-auto w-4">
             {isAudioEnabled ? (
               <>

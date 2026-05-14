@@ -12,7 +12,9 @@ export const identityContent = {
     { label: 'CHECKSUM', value: '07C3 (OK)' },
   ],
   paragraphs: [
-    'Alin Iosa is a product manager and retro-futuristic hardware builder working through interfaces, systems, and tactile constraints.',
-    'The current operating mode favors clear structure, inspectable decisions, and objects that make digital state feel physically legible.',
+    'I like reducing complexity without flattening personality out of the system. Automation pipelines, design systems, procedural tooling. The usual PM vocabulary, just with a heavier bias toward actually understanding how the machine works underneath.',
+    'Outside of software, I build retro-futuristic installations from salvaged hardware; strange components I can rescue from flea markets or recycling centers before they disappear forever.',
+    'Part engineering exercise, part design fiction, part philosophical problem, I am interested in the gap between the future people were promised and the one we actually got.',
+    'I still believe technology should feel authored, physical and a little dangerous. Not frictionless. Not invisible. Just honest about what it is.',
   ],
 };
