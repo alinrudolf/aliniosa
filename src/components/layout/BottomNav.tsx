@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { bottomNavigation } from '../../data/navigation';
+import { type MouseEvent, useEffect, useRef, useState } from 'react';
+import { bottomNavigation, type BottomNavigationItem } from '../../data/navigation';
 import { TerminalTextSwap } from './TerminalTextSwap';
 
 const navigationDisplay: Record<string, { index: string; title: string; subtitle: string }> = {
@@ -36,9 +36,21 @@ type BottomNavProps = {
   hoverNavId?: string | null;
   onActiveNavClick: () => void;
   onActiveNavChange: (id: string | null) => void;
+  onNavItemClick?: (context: {
+    event: MouseEvent<HTMLAnchorElement>;
+    isActive: boolean;
+    item: BottomNavigationItem;
+    sourceRect: DOMRect;
+  }) => boolean | void;
 };
 
-export function BottomNav({ activeNavId = null, hoverNavId = null, onActiveNavClick, onActiveNavChange }: BottomNavProps) {
+export function BottomNav({
+  activeNavId = null,
+  hoverNavId = null,
+  onActiveNavClick,
+  onActiveNavChange,
+  onNavItemClick,
+}: BottomNavProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isAudioEnabled, setIsAudioEnabled] = useState(false);
   const navigationLabel = hoverNavId ? navigationHoverLabels[hoverNavId] ?? '[NAVIGATION]' : '[NAVIGATION]';
@@ -122,6 +134,17 @@ export function BottomNav({ activeNavId = null, hoverNavId = null, onActiveNavCl
               aria-label={item.ariaLabel}
               aria-current={isActive ? 'page' : undefined}
               onClick={(event) => {
+                const wasHandled = onNavItemClick?.({
+                  event,
+                  isActive,
+                  item,
+                  sourceRect: event.currentTarget.getBoundingClientRect(),
+                });
+
+                if (wasHandled) {
+                  return;
+                }
+
                 if (!isActive) {
                   return;
                 }

@@ -13,11 +13,12 @@ type HeaderModuleProps = {
   header: SiteHeader;
   logoAnimationKey?: string;
   embedded?: boolean;
+  compact?: boolean;
 };
 
-export function HeaderModule({ header, logoAnimationKey = 'initial', embedded = false }: HeaderModuleProps) {
+export function HeaderModule({ header, logoAnimationKey = 'initial', embedded = false, compact = false }: HeaderModuleProps) {
   const headerFrameClass = embedded
-    ? 'relative flex h-[140px] shrink-0 items-start bg-[color:var(--bg-crt)]'
+    ? `relative flex shrink-0 items-start bg-[color:var(--bg-crt)] ${compact ? '' : 'h-[140px]'}`
     : 'relative grid h-40 shrink-0 border border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)] md:grid-cols-[160px_1fr]';
   const identityGroupClass = embedded ? 'ml-6 inline-flex h-auto items-center p-2' : 'contents';
   const logoFrameClass = embedded
