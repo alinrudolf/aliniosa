@@ -1,0 +1,95 @@
+{
+  "movies": [
+    {
+      "id": "01",
+      "title": "Blow Out",
+      "genres": [
+        "Thriller",
+        "Mystery"
+      ],
+      "year": 1981,
+      "director": "Brian De Palma",
+      "imdb": "https://www.imdb.com/title/tt0082085/",
+      "poster": "/library-posters/Blow Out.png",
+      "synopsis": "A movie sound recordist accidentally records evidence that proves a car accident was actually murder, then finds himself pulled into the danger around it."
+    },
+    {
+      "id": "02",
+      "title": "Escape from New York",
+      "genres": [
+        "Sci-Fi",
+        "Action"
+      ],
+      "year": 1981,
+      "director": "John Carpenter",
+      "imdb": "https://www.imdb.com/title/tt0082340/",
+      "poster": "/library-posters/Escape From New York.png",
+      "synopsis": "In a dystopian future, ex-soldier and criminal Snake Plissken is sent into Manhattan, now a maximum-security prison, to rescue the U.S. President."
+    },
+    {
+      "id": "03",
+      "title": "Ghost in the Shell",
+      "genres": [
+        "Animation",
+        "Sci-Fi"
+      ],
+      "year": 1995,
+      "director": "Mamoru Oshii",
+      "imdb": "https://www.imdb.com/title/tt0113568/",
+      "poster": "/library-posters/Ghost In The Shell.png",
+      "synopsis": "A cyborg policewoman and her partner hunt a mysterious hacker known as the Puppet Master in a networked future where identity and consciousness are unstable."
+    },
+    {
+      "id": "04",
+      "title": "The Big Sleep",
+      "genres": [
+        "Noir",
+        "Mystery"
+      ],
+      "year": 1946,
+      "director": "Howard Hawks",
+      "imdb": "https://www.imdb.com/title/tt0038355/",
+      "poster": "/library-posters/The Big Sleep.png",
+      "synopsis": "Private detective Philip Marlowe is hired to investigate blackmail and becomes trapped in a dense web of gambling debts, murder, and organized crime."
+    },
+    {
+      "id": "05",
+      "title": "The Outfit",
+      "genres": [
+        "Thriller",
+        "Action"
+      ],
+      "year": 1973,
+      "director": "John Flynn",
+      "imdb": "https://www.imdb.com/title/tt0071960/",
+      "poster": "/library-posters/The Outfit.png",
+      "synopsis": "After robbing a mob-owned bank and serving time, Earl Macklin is released from prison and starts a private war against the crime organization behind it."
+    },
+    {
+      "id": "06",
+      "title": "Blade Runner",
+      "genres": [
+        "Sci-Fi",
+        "Noir"
+      ],
+      "year": 1982,
+      "director": "Ridley Scott",
+      "imdb": "https://www.imdb.com/title/tt0083658/",
+      "poster": "/library-posters/Blade Runner.png",
+      "synopsis": "A blade runner is sent to find and terminate four escaped replicants who have returned to Earth in search of their creator."
+    },
+    {
+      "id": "07",
+      "title": "Point Blank",
+      "genres": [
+        "Thriller",
+        "Crime"
+      ],
+      "year": 1967,
+      "director": "John Boorman",
+      "imdb": "https://www.imdb.com/title/tt0062138/",
+      "poster": "/library-posters/Point Blank.png",
+      "synopsis": "After being double-crossed and left for dead, Walker returns with a single-minded objective: recover the money stolen from him."
+    }
+  ]
+}

@@ -3,9 +3,11 @@ import { BottomNav } from '../components/layout/BottomNav';
 import { HeaderModule } from '../components/layout/HeaderModule';
 import { PageTransitionOverlay, type PageTransitionRect, type PageTransitionState } from '../components/layout/PageTransitionOverlay';
 import { SiteShell } from '../components/layout/SiteShell';
+import { MovieLibrary } from '../components/library/MovieLibrary';
 import { SignalMonitorNav } from '../components/signal/SignalMonitorNav';
 import { IdentityBody } from '../components/system/IdentityBody';
 import { SystemReadout } from '../components/system/SystemReadout';
+import { movies } from '../data/movies';
 import { bottomNavigation, signalMonitorLabel, siteHeader } from '../data/navigation';
 import { HoverTextureExport } from './HoverTextureExport';
 import { TerrainPreviewField } from './TerrainPreviewField';
@@ -25,6 +27,9 @@ export function App() {
   const activeHashNavId = bottomNavigation.find((item) => item.href === activeHash)?.id ?? null;
   const isSystemActive = activeHash === '#system';
   const isSystemRendered = renderedHash === '#system';
+  const isLibraryActive = activeHash === '#library';
+  const isLibraryRendered = renderedHash === '#library';
+  const isContentPageActive = isSystemActive || isLibraryActive;
 
   const isReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -143,15 +148,22 @@ export function App() {
         <span className="system-label-type absolute right-8 top-0 z-30 -translate-y-1/2 bg-[color:var(--bg-crt)] px-2 text-[0.68rem] text-[color:var(--amber-core)]">
           {signalMonitorLabel}
         </span>
-        <div className={`relative shrink-0 overflow-hidden ${isSystemActive ? 'h-32 py-6' : 'h-[255px] pt-6'}`}>
-          <HeaderModule header={siteHeader} embedded compact={isSystemActive} />
+        <div className={`relative shrink-0 overflow-hidden ${isContentPageActive ? 'h-32 py-6' : 'h-[255px] pt-6'}`}>
+          <HeaderModule header={siteHeader} embedded compact={isContentPageActive} />
           <div className="absolute right-10 top-9">
             <SystemReadout />
           </div>
         </div>
+        {isLibraryRendered ? (
+          <span className="library-page-label library-page-label-shell" aria-hidden="true">
+            [LIBRARY]
+          </span>
+        ) : null}
         <main ref={mainRef} className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto">
           {isSystemRendered ? (
             <IdentityBody />
+          ) : isLibraryRendered ? (
+            <MovieLibrary movies={movies} />
           ) : renderedHash === null ? null : (
             <SignalMonitorNav activeNavId={activeNavId} onActiveNavChange={setWaveformActiveNavId} embedded />
           )}
