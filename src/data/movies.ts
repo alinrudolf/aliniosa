@@ -11,4 +11,11 @@ export type Movie = {
   synopsis: string;
 };
 
-export const movies: Movie[] = libraryMoviesData.movies;
+function withBaseUrl(path: string) {
+  return `${import.meta.env.BASE_URL}${path.replace(/^\//, '')}`;
+}
+
+export const movies: Movie[] = libraryMoviesData.movies.map((movie) => ({
+  ...movie,
+  poster: withBaseUrl(movie.poster),
+}));
