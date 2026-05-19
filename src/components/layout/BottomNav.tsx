@@ -20,7 +20,7 @@ const navigationHoverLabels: Record<string, string> = {
   CNT: '[CON]',
 };
 
-const BACKGROUND_AUDIO_SRC = '/audio/bg-audio.mp3';
+const BACKGROUND_AUDIO_SRC = `${import.meta.env.BASE_URL}audio/bg-audio.mp3`;
 const BACKGROUND_AUDIO_STORAGE_KEY = 'backgroundAudioEnabled';
 
 function storeBackgroundAudioPreference(isEnabled: boolean) {
@@ -61,7 +61,7 @@ export function BottomNav({
     };
   }, []);
 
-  const toggleBackgroundAudio = async () => {
+  const toggleBackgroundAudio = () => {
     if (isAudioEnabled) {
       audioRef.current?.pause();
       storeBackgroundAudioPreference(false);
@@ -76,15 +76,15 @@ export function BottomNav({
     audio.loop = true;
     audio.volume = 0.15;
 
-    try {
-      await audio.play();
-      storeBackgroundAudioPreference(true);
-      setIsAudioEnabled(true);
-    } catch {
+    setIsAudioEnabled(true);
+    storeBackgroundAudioPreference(true);
+
+    audio.play().catch((error: unknown) => {
+      console.warn('Background audio playback failed.', error);
       audio.pause();
       storeBackgroundAudioPreference(false);
       setIsAudioEnabled(false);
-    }
+    });
   };
 
   return (
