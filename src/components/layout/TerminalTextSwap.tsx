@@ -29,17 +29,19 @@ function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-export function TerminalTextSwap({ value }: TerminalTextSwapProps) {
+export function useTerminalTextSwap(value: string, triggerKey = value) {
   const [displayValue, setDisplayValue] = useState(value);
   const [isAnimating, setIsAnimating] = useState(false);
   const previousValueRef = useRef(value);
+  const previousTriggerKeyRef = useRef(triggerKey);
 
   useEffect(() => {
-    if (previousValueRef.current === value) {
+    if (previousValueRef.current === value && previousTriggerKeyRef.current === triggerKey) {
       return;
     }
 
     previousValueRef.current = value;
+    previousTriggerKeyRef.current = triggerKey;
 
     if (prefersReducedMotion()) {
       setDisplayValue(value);
@@ -70,7 +72,16 @@ export function TerminalTextSwap({ value }: TerminalTextSwapProps) {
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [value]);
+  }, [value, triggerKey]);
+
+  return {
+    displayValue,
+    isAnimating,
+  };
+}
+
+export function TerminalTextSwap({ value }: TerminalTextSwapProps) {
+  const { displayValue, isAnimating } = useTerminalTextSwap(value);
 
   return (
     <span className={`terminal-text-swap ${isAnimating ? 'terminal-text-swap-active' : ''}`} aria-label={value}>

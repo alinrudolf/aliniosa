@@ -1,13 +1,29 @@
 import { useMemo, useRef, useState, type KeyboardEvent, type WheelEvent } from 'react';
 import type { Movie } from '../../data/movies';
+import { useTerminalTextSwap } from '../layout/TerminalTextSwap';
 import { MovieItem } from './MovieItem';
 
 type MovieLibraryProps = {
   movies: Movie[];
 };
 
+type AnimatedLibraryTextProps = {
+  triggerKey: string;
+  value: string;
+};
+
 function formatGenres(movie: Movie) {
   return movie.genres.join(', ');
+}
+
+function AnimatedLibraryText({ triggerKey, value }: AnimatedLibraryTextProps) {
+  const { displayValue } = useTerminalTextSwap(value, triggerKey);
+
+  return (
+    <span aria-label={value}>
+      <span aria-hidden="true">{displayValue}</span>
+    </span>
+  );
 }
 
 export function MovieLibrary({ movies }: MovieLibraryProps) {
@@ -17,6 +33,9 @@ export function MovieLibrary({ movies }: MovieLibraryProps) {
     () => movies.find((movie) => movie.id === selectedMovieId) ?? movies[0],
     [movies, selectedMovieId],
   );
+  const synopsisText = selectedMovie?.synopsis ?? '';
+  const animationKey = selectedMovie?.id ?? selectedMovieId;
+  const { displayValue: displayedSynopsis } = useTerminalTextSwap(synopsisText, animationKey);
 
   const focusMovieCard = (movieId: string) => {
     window.requestAnimationFrame(() => {
@@ -104,25 +123,35 @@ export function MovieLibrary({ movies }: MovieLibraryProps) {
       </div>
       <section className="library-details-panel" aria-label={`${selectedMovie.title} details`} aria-live="polite">
         <div className="library-details-primary">
-          <h3 className="library-details-title">{selectedMovie.title}</h3>
+          <h3 className="library-details-title">
+            <AnimatedLibraryText value={selectedMovie.title} triggerKey={animationKey} />
+          </h3>
           <dl className="library-details-list">
             <div>
               <dt>Genre</dt>
-              <dd>{formatGenres(selectedMovie)}</dd>
+              <dd>
+                <AnimatedLibraryText value={formatGenres(selectedMovie)} triggerKey={animationKey} />
+              </dd>
             </div>
             <div>
               <dt>Director</dt>
-              <dd>{selectedMovie.director}</dd>
+              <dd>
+                <AnimatedLibraryText value={selectedMovie.director} triggerKey={animationKey} />
+              </dd>
             </div>
             <div>
               <dt>Year</dt>
-              <dd>{selectedMovie.year}</dd>
+              <dd>
+                <AnimatedLibraryText value={String(selectedMovie.year)} triggerKey={animationKey} />
+              </dd>
             </div>
           </dl>
         </div>
         <div className="library-details-synopsis">
           <p className="library-details-label">Synopsis</p>
-          <p>{selectedMovie.synopsis}</p>
+          <p aria-label={selectedMovie.synopsis}>
+            <span aria-hidden="true">{displayedSynopsis}</span>
+          </p>
           <a href={selectedMovie.imdb} target="_blank" rel="noreferrer" className="library-imdb-link">
             IMDB ↗
           </a>
