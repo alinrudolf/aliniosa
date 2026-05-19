@@ -90,6 +90,174 @@
       "imdb": "https://www.imdb.com/title/tt0062138/",
       "poster": "/library-posters/Point Blank.png",
       "synopsis": "After being double-crossed and left for dead, Walker returns with a single-minded objective: recover the money stolen from him."
+    },
+    {
+      "id": "08",
+      "title": "Patlabor: The Movie",
+      "genres": [
+        "Animation",
+        "Sci-Fi"
+      ],
+      "year": 1989,
+      "director": "Mamoru Oshii",
+      "imdb": "https://www.imdb.com/title/tt0100339/",
+      "poster": "/library-posters/Patlabor.png",
+      "synopsis": "A rogue military robot threatens Tokyo while members of Special Vehicle Section 2 uncover a conspiracy tied to the city's new technological infrastructure."
+    },
+    {
+      "id": "09",
+      "title": "Hardware",
+      "genres": [
+        "Cyberpunk",
+        "Thriller"
+      ],
+      "year": 1990,
+      "director": "Richard Stanley",
+      "imdb": "https://www.imdb.com/title/tt0099740/",
+      "poster": "/library-posters/Hardware.png",
+      "synopsis": "A scavenged robot head rebuilds itself into a killing machine inside a claustrophobic post-apocalyptic apartment."
+    },
+    {
+      "id": "10",
+      "title": "Vanishing Point",
+      "genres": [
+        "Thriller",
+        "Action"
+      ],
+      "year": 1971,
+      "director": "Richard C. Sarafian",
+      "imdb": "https://www.imdb.com/title/tt0067927/",
+      "poster": "/library-posters/Vanishing Point 2.png",
+      "synopsis": "A former race driver delivers a Dodge Challenger across the American Southwest while pursued by police in an increasingly existential chase."
+    },
+    {
+      "id": "11",
+      "title": "Year of the Dragon",
+      "genres": [
+        "Neo-Noir",
+        "Thriller"
+      ],
+      "year": 1985,
+      "director": "Michael Cimino",
+      "imdb": "https://www.imdb.com/title/tt0090319/",
+      "poster": "/library-posters/Year Of The Dragon.png",
+      "synopsis": "A volatile New York police captain wages a brutal campaign against rising Triad power in Chinatown."
+    },
+    {
+      "id": "12",
+      "title": "The Crow",
+      "genres": [
+        "Thriller",
+        "Horror"
+      ],
+      "year": 1994,
+      "director": "Alex Proyas",
+      "imdb": "https://www.imdb.com/title/tt0109506/",
+      "poster": "/library-posters/The Crow.png",
+      "synopsis": "Murdered musician Eric Draven returns from the dead to avenge himself and his fiancée in a rain-soaked industrial city."
+    },
+    {
+      "id": "13",
+      "title": "The Old Man & the Gun",
+      "genres": [
+        "Heist",
+        "Drama"
+      ],
+      "year": 2018,
+      "director": "David Lowery",
+      "imdb": "https://www.imdb.com/title/tt2837574/",
+      "poster": "/library-posters/The Old Man And The Gun.png",
+      "synopsis": "An aging bank robber continues escaping prison and charming everyone around him while pursued by a detective who grows fascinated with his lifestyle."
+    },
+    {
+      "id": "14",
+      "title": "Body Double",
+      "genres": [
+        "Giallo",
+        "Thriller"
+      ],
+      "year": 1984,
+      "director": "Brian De Palma",
+      "imdb": "https://www.imdb.com/title/tt0086984/",
+      "poster": "/library-posters/Body Double.png",
+      "synopsis": "A struggling actor becomes obsessed with a mysterious woman and witnesses what appears to be her murder."
+    },
+    {
+      "id": "15",
+      "title": "Dark Passage",
+      "genres": [
+        "Noir",
+        "Crime"
+      ],
+      "year": 1947,
+      "director": "Delmer Daves",
+      "imdb": "https://www.imdb.com/title/tt0039302/",
+      "poster": "/library-posters/Dark Passage.png",
+      "synopsis": "A man wrongly convicted of murdering his wife escapes prison and hides in San Francisco while searching for the real killer."
+    },
+    {
+      "id": "16",
+      "title": "X",
+      "genres": [
+        "Slasher",
+        "Horror"
+      ],
+      "year": 2022,
+      "director": "Ti West",
+      "imdb": "https://www.imdb.com/title/tt13560574/",
+      "poster": "/library-posters/X.png",
+      "synopsis": "A group of filmmakers shooting an adult movie on a rural Texas farm are stalked by the elderly owners of the property."
+    },
+    {
+      "id": "17",
+      "title": "The Raid 2",
+      "genres": [
+        "Martial Arts",
+        "Thriller"
+      ],
+      "year": 2014,
+      "director": "Gareth Evans",
+      "imdb": "https://www.imdb.com/title/tt2265171/",
+      "poster": "/library-posters/The Raid 2.png",
+      "synopsis": "An undercover cop infiltrates Jakarta's criminal underworld after surviving a brutal raid on a crime lord's compound."
+    },
+    {
+      "id": "18",
+      "title": "Cat on a Hot Tin Roof",
+      "genres": [
+        "Psychological Drama"
+      ],
+      "year": 1958,
+      "director": "Richard Brooks",
+      "imdb": "https://www.imdb.com/title/tt0051459/",
+      "poster": "/library-posters/Cat on a Hot Tin Roof.png",
+      "synopsis": "Tensions erupt inside a wealthy Southern family as resentment, alcoholism, inheritance, and repressed desires surface during a birthday gathering."
+    },
+    {
+      "id": "19",
+      "title": "The Wackness",
+      "genres": [
+        "Coming-of-Age",
+        "Drama"
+      ],
+      "year": 2008,
+      "director": "Jonathan Levine",
+      "imdb": "https://www.imdb.com/title/tt1082886/",
+      "poster": "/library-posters/The Wackness.png",
+      "synopsis": "A teenage drug dealer trades weed for therapy with a psychiatrist while drifting through first love, loneliness, and summer in 1994 New York."
+    },
+    {
+      "id": "20",
+      "title": "Black Rain",
+      "genres": [
+        "Neo-Noir",
+        "Crime"
+      ],
+      "year": 1989,
+      "director": "Ridley Scott",
+      "imdb": "https://www.imdb.com/title/tt0096933/",
+      "poster": "/library-posters/Black Rain.png",
+      "synopsis": "Two New York detectives escort a Yakuza member to Osaka and become trapped inside a violent conflict between rival Japanese crime syndicates."
     }
   ]
 }
