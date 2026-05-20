@@ -17,14 +17,60 @@
   --glow-text: var(--crt-text-shadow);
   --glow-text-soft: var(--crt-text-shadow);
   --glow-svg: var(--crt-line-glow);
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.25rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
-  --space-10: 2.5rem;
-  --space-12: 3rem;
-  --space-16: 4rem;
+  --ui-scale: clamp(1, calc(100vh / 1080px), 1.35);
+
+  --space-1: calc(0.25rem * var(--ui-scale));
+  --space-2: calc(0.5rem * var(--ui-scale));
+  --space-3: calc(0.75rem * var(--ui-scale));
+  --space-4: calc(1rem * var(--ui-scale));
+  --space-5: calc(1.25rem * var(--ui-scale));
+  --space-6: calc(1.5rem * var(--ui-scale));
+  --space-8: calc(2rem * var(--ui-scale));
+  --space-10: calc(2.5rem * var(--ui-scale));
+  --space-12: calc(3rem * var(--ui-scale));
+  --space-16: calc(4rem * var(--ui-scale));
+
+  --font-xs: calc(0.68rem * var(--ui-scale));
+  --font-sm: calc(0.875rem * var(--ui-scale));
+  --font-base: calc(1rem * var(--ui-scale));
+  --font-md: calc(1.375rem * var(--ui-scale));
+  --font-lg: calc(1.5rem * var(--ui-scale));
+  --font-xl: calc(2rem * var(--ui-scale));
+
+  --shell-margin-x: calc(5rem * var(--ui-scale));
+  --shell-margin-y: calc(2.5rem * var(--ui-scale));
+  --content-padding: var(--space-10);
+  --section-gap: var(--space-10);
+  --header-height: calc(8rem * var(--ui-scale));
+  --header-embedded-height: calc(8.75rem * var(--ui-scale));
+  --header-height-home: calc(15.9375rem * var(--ui-scale));
+  --header-logo-size: calc(4rem * var(--ui-scale));
+  --header-logo-column: calc(10rem * var(--ui-scale));
+  --bottom-nav-label-height: calc(2.875rem * var(--ui-scale));
+  --bottom-nav-button-size: calc(2rem * var(--ui-scale));
+  --bottom-nav-icon-size: calc(1rem * var(--ui-scale));
+  --bottom-nav-connector-offset: calc(-0.75rem * var(--ui-scale));
+  --bottom-nav-connector-width: calc(1.5rem * var(--ui-scale));
+  --audio-status-dot-size: calc(0.375rem * var(--ui-scale));
+  --audio-status-dot-column: calc(0.5rem * var(--ui-scale));
+  --audio-icon-column: calc(1rem * var(--ui-scale));
+
+  --readout-width: calc(40rem * var(--ui-scale));
+  --readout-column-width: calc(18.75rem * var(--ui-scale));
+
+  --identity-avatar-panel-max: calc(39.75rem * var(--ui-scale));
+  --identity-avatar-size-max: calc(36.75rem * var(--ui-scale));
+  --identity-avatar-corner-size: calc(1.5rem * var(--ui-scale));
+  --identity-status-label-width: calc(8.5rem * var(--ui-scale));
+  --identity-waveform-height: calc(8.875rem * var(--ui-scale));
+
+  --library-card-height: calc(29.875rem * var(--ui-scale));
+  --library-card-min-height: calc(22rem * var(--ui-scale));
+  --library-card-index-height: calc(1.625rem * var(--ui-scale));
+  --library-card-padding: var(--space-2);
+  --library-card-copy-gap: var(--space-1);
+  --library-details-height: calc(9.875rem * var(--ui-scale));
+  --library-details-height-compact: calc(9rem * var(--ui-scale));
+  --library-details-primary-min: calc(16rem * var(--ui-scale));
+  --library-details-primary-max: calc(30rem * var(--ui-scale));
 }

@@ -19,22 +19,22 @@ type SystemModuleProps = {
 
 export function SystemModule({ id, moduleId, status, title, blocks, command }: SystemModuleProps) {
   return (
-    <section id={id} className="scroll-mt-8 border-t border-[color:var(--amber-dim)] py-8">
-      <div className="mb-5 flex items-center justify-between gap-4">
-        <p className="font-mono text-[0.68rem] uppercase tracking-[0.18em] text-[color:var(--amber-dim)]">{moduleId}</p>
+    <section id={id} className="scroll-mt-[var(--space-8)] border-t border-[color:var(--amber-dim)] py-[var(--space-8)]">
+      <div className="mb-[var(--space-5)] flex items-center justify-between gap-[var(--space-4)]">
+        <p className="font-mono text-[length:var(--font-xs)] uppercase tracking-[0.18em] text-[color:var(--amber-dim)]">{moduleId}</p>
         <StatusBadge status={status} />
       </div>
-      <h2 className="mb-6 max-w-4xl font-sans text-2xl font-semibold leading-tight text-[color:var(--amber-core)] [text-shadow:var(--glow-text-soft)] sm:text-3xl">
+      <h2 className="mb-[var(--space-6)] max-w-[calc(56rem*var(--ui-scale))] font-sans text-[length:var(--font-xl)] font-semibold leading-tight text-[color:var(--amber-core)] [text-shadow:var(--glow-text-soft)]">
         {title}
       </h2>
-      <dl className="grid gap-5">
+      <dl className="grid gap-[var(--space-5)]">
         {blocks.map((block) => (
           <SystemBlock key={block.label} label={block.label}>
             {block.value}
           </SystemBlock>
         ))}
       </dl>
-      {command ? <div className="mt-6"><SystemCommand command={command} /></div> : null}
+      {command ? <div className="mt-[var(--space-6)]"><SystemCommand command={command} /></div> : null}
     </section>
   );
 }

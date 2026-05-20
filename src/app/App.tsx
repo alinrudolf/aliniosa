@@ -145,12 +145,12 @@ export function App() {
   return (
     <SiteShell>
       <section className="relative flex h-full min-h-0 w-full flex-col overflow-visible border border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)] text-[color:var(--amber-base)]">
-        <span className="system-label-type absolute right-8 top-0 z-30 -translate-y-1/2 bg-[color:var(--bg-crt)] px-2 text-[0.68rem] text-[color:var(--amber-core)]">
+        <span className="system-label-type absolute right-[var(--space-8)] top-0 z-30 -translate-y-1/2 bg-[color:var(--bg-crt)] px-[var(--space-2)] text-[length:var(--font-xs)] text-[color:var(--amber-core)]">
           {signalMonitorLabel}
         </span>
-        <div className={`relative shrink-0 overflow-hidden ${isContentPageActive ? 'h-32 py-6' : 'h-[255px] pt-6'}`}>
+        <div className={`relative shrink-0 overflow-hidden ${isContentPageActive ? 'h-[var(--header-height)] py-[var(--space-6)]' : 'h-[var(--header-height-home)] pt-[var(--space-6)]'}`}>
           <HeaderModule header={siteHeader} embedded compact={isContentPageActive} />
-          <div className="absolute right-10 top-9">
+          <div className="absolute right-[var(--space-10)] top-[calc(2.25rem*var(--ui-scale))]">
             <SystemReadout />
           </div>
         </div>

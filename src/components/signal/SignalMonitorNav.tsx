@@ -478,7 +478,7 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange, embedded = fa
       aria-label="Secondary signal navigation"
     >
       {embedded ? null : (
-        <span className="absolute right-8 top-0 z-10 -translate-y-1/2 bg-[color:var(--bg-crt)] px-2 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-[color:var(--amber-core)]">
+        <span className="absolute right-[var(--space-8)] top-0 z-10 -translate-y-1/2 bg-[color:var(--bg-crt)] px-[var(--space-2)] font-mono text-[length:var(--font-xs)] uppercase tracking-[0.14em] text-[color:var(--amber-core)]">
           {sectionLabel}
         </span>
       )}

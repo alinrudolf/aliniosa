@@ -89,8 +89,8 @@ export function BottomNav({
 
   return (
     <section className="shrink-0 overflow-hidden border-t border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)]">
-      <div className="flex h-[46px] items-center justify-between border-b border-[color:var(--amber-dim)] px-6">
-        <span className="system-label-type text-[0.68rem] text-[color:var(--amber-core)]">
+      <div className="flex h-[var(--bottom-nav-label-height)] items-center justify-between border-b border-[color:var(--amber-dim)] px-[var(--space-6)]">
+        <span className="system-label-type text-[length:var(--font-xs)] text-[color:var(--amber-core)]">
           <TerminalTextSwap value={navigationLabel} />
         </span>
         <button
@@ -98,13 +98,13 @@ export function BottomNav({
           aria-label={isAudioEnabled ? 'Disable background audio' : 'Enable background audio'}
           aria-pressed={isAudioEnabled}
           onClick={toggleBackgroundAudio}
-          className="grid h-8 w-8 grid-cols-[8px_16px] items-center justify-end gap-2 bg-[color:var(--bg-crt)] text-[color:var(--amber-base)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--amber-core)]"
+          className="grid h-[var(--bottom-nav-button-size)] w-[var(--bottom-nav-button-size)] grid-cols-[var(--audio-status-dot-column)_var(--audio-icon-column)] items-center justify-end gap-[var(--space-2)] bg-[color:var(--bg-crt)] text-[color:var(--amber-base)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--amber-core)]"
         >
           <span
             className={`audio-status-dot ${isAudioEnabled ? 'audio-status-dot-active' : ''}`}
             aria-hidden="true"
           />
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-auto w-4">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-auto w-[var(--bottom-nav-icon-size)]">
             {isAudioEnabled ? (
               <>
                 <path d="M22 12H20" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
@@ -128,7 +128,7 @@ export function BottomNav({
           const dividerClass =
             index === 0
               ? ''
-              : 'border-l border-[color:var(--amber-dim)] before:absolute before:left-[-12px] before:top-1/2 before:z-20 before:h-0.5 before:w-6 before:-translate-y-1/2 before:bg-[color:var(--amber-dim)] before:content-[""]';
+              : 'border-l border-[color:var(--amber-dim)] before:absolute before:left-[var(--bottom-nav-connector-offset)] before:top-1/2 before:z-20 before:h-0.5 before:w-[var(--bottom-nav-connector-width)] before:-translate-y-1/2 before:bg-[color:var(--amber-dim)] before:content-[""]';
           const buttonStateClass = isActive ? 'bottom-nav-item-active outline outline-1 -outline-offset-1 outline-[color:var(--amber-base)]' : '';
 
           return (
@@ -160,13 +160,13 @@ export function BottomNav({
               onMouseLeave={() => onActiveNavChange(null)}
               onFocus={() => onActiveNavChange(item.id)}
               onBlur={() => onActiveNavChange(null)}
-              className={`bottom-nav-item relative grid min-w-0 content-start gap-2 bg-[color:var(--bg-crt)] px-6 py-4 font-mono text-[color:var(--amber-base)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--amber-core)] ${dividerClass} ${buttonStateClass}`}
+              className={`bottom-nav-item relative grid min-w-0 content-start gap-[var(--space-2)] bg-[color:var(--bg-crt)] px-[var(--space-6)] py-[var(--space-4)] font-mono text-[color:var(--amber-base)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--amber-core)] ${dividerClass} ${buttonStateClass}`}
             >
               <span className="bottom-nav-state-layer bottom-nav-hover-layer" aria-hidden="true" />
               <span className="bottom-nav-state-layer bottom-nav-active-layer" aria-hidden="true" />
-              <span className="relative z-10 whitespace-nowrap text-base font-semibold uppercase leading-none text-[color:var(--amber-core)]">{display.index}</span>
-              <span className="bottom-nav-copy relative z-10 whitespace-nowrap text-base font-semibold uppercase leading-none">{display.title}</span>
-              <span className="bottom-nav-copy relative z-10 whitespace-nowrap text-sm font-normal leading-none">{display.subtitle}</span>
+              <span className="relative z-10 whitespace-nowrap text-[length:var(--font-base)] font-semibold uppercase leading-none text-[color:var(--amber-core)]">{display.index}</span>
+              <span className="bottom-nav-copy relative z-10 whitespace-nowrap text-[length:var(--font-base)] font-semibold uppercase leading-none">{display.title}</span>
+              <span className="bottom-nav-copy relative z-10 whitespace-nowrap text-[length:var(--font-sm)] font-normal leading-none">{display.subtitle}</span>
               <span className="sr-only">
                 {item.label}
               </span>
