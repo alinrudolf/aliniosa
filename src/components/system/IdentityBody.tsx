@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react';
-import avatarImageUrl from '../../assets/images/Avatar Transparent Amber.png?url';
+import avatarImageUrl from '../../assets/images/identity-profile-dither.svg?url';
 import { identityContent } from '../../data/identity';
 
 type IdentityStatusItem = (typeof identityContent.statusLeft)[number];
@@ -37,7 +37,6 @@ function IdentityAvatarPanel() {
     <section className="identity-avatar-panel" aria-label="Identity signal portrait">
       <div className="identity-avatar-frame">
         <img src={avatarImageUrl} alt={identityContent.imageAlt} className="identity-avatar-image" />
-        <div className="identity-avatar-active-overlay" aria-hidden="true" />
         <span className="identity-avatar-corner identity-avatar-corner-tl" aria-hidden="true" />
         <span className="identity-avatar-corner identity-avatar-corner-tr" aria-hidden="true" />
         <span className="identity-avatar-corner identity-avatar-corner-bl" aria-hidden="true" />

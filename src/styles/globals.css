@@ -396,44 +396,6 @@ a {
   }
 }
 
-.identity-avatar-frame::before {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  content: "";
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      color-mix(in srgb, var(--amber-core) 10%, transparent) 0,
-      color-mix(in srgb, var(--amber-core) 10%, transparent) 1px,
-      transparent 1px,
-      transparent 2px
-    ),
-    repeating-linear-gradient(
-      to right,
-      color-mix(in srgb, var(--amber-base) 3%, transparent) 0,
-      color-mix(in srgb, var(--amber-base) 3%, transparent) 1px,
-      transparent 1px,
-      transparent 5px
-    ),
-    color-mix(in srgb, var(--amber-base) 17%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--amber-core) 36%, transparent),
-    inset 0 0 18px color-mix(in srgb, var(--amber-base) 28%, transparent);
-  opacity: 0.86;
-  mix-blend-mode: screen;
-}
-
-.identity-avatar-frame::after {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  content: "";
-  box-shadow: inset 0 0 18px var(--amber-base);
-  opacity: 0.14;
-}
-
 .identity-avatar-image {
   position: relative;
   z-index: 0;
@@ -441,30 +403,6 @@ a {
   width: 100%;
   height: 100%;
   object-fit: contain;
-}
-
-.identity-avatar-active-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      color-mix(in srgb, var(--amber-core) 10%, transparent) 0,
-      color-mix(in srgb, var(--amber-core) 10%, transparent) 1px,
-      transparent 1px,
-      transparent 2px
-    ),
-    repeating-linear-gradient(
-      to right,
-      color-mix(in srgb, var(--amber-base) 3%, transparent) 0,
-      color-mix(in srgb, var(--amber-base) 3%, transparent) 1px,
-      transparent 1px,
-      transparent 5px
-    );
-  opacity: 0.62;
-  mix-blend-mode: screen;
 }
 
 .identity-avatar-corner {
