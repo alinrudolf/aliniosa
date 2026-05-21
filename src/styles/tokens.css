@@ -66,6 +66,7 @@
 
   --library-card-height: calc(29.875rem * var(--ui-scale));
   --library-card-min-height: calc(22rem * var(--ui-scale));
+  --library-poster-aspect-ratio: 2 / 3;
   --library-card-index-height: calc(1.625rem * var(--ui-scale));
   --library-card-padding: var(--space-2);
   --library-card-copy-gap: var(--space-1);

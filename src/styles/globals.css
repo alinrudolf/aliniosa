@@ -677,15 +677,14 @@ a {
   flex: 0 0 auto;
   height: min(var(--library-card-height), 100%);
   min-height: var(--library-card-min-height);
-  aspect-ratio: 254.67 / 478;
-  container-type: size;
 }
 
 .library-movie-card {
   position: relative;
   display: grid;
-  width: 100%;
+  width: fit-content;
   height: 100%;
+  grid-template-columns: max-content;
   grid-template-rows: var(--library-card-index-height) minmax(0, 1fr) auto;
   padding: var(--library-card-padding);
   overflow: hidden;
@@ -724,8 +723,10 @@ a {
 
 .library-movie-poster-frame {
   display: block;
+  width: auto;
+  height: 100%;
   min-height: 0;
-  padding-bottom: var(--library-card-padding);
+  aspect-ratio: var(--library-poster-aspect-ratio);
   overflow: hidden;
   background: var(--bg-crt);
 }
@@ -734,7 +735,7 @@ a {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   user-select: none;
 }
@@ -742,6 +743,7 @@ a {
 .library-movie-copy {
   position: relative;
   display: grid;
+  width: calc(100% + (var(--library-card-padding) * 2));
   min-width: 0;
   align-content: start;
   gap: var(--library-card-copy-gap);
