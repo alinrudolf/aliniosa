@@ -1,33 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
 import { systemReadout } from '../../data/systemReadout';
-
-const UPTIME_INTERVAL_MS = 1000;
-
-function formatUptime(elapsedMs: number) {
-  const totalSeconds = Math.floor(elapsedMs / 1000);
-  const days = Math.floor(totalSeconds / 86400);
-  const hours = Math.floor((totalSeconds % 86400) / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-  const pad = (value: number) => String(value).padStart(2, '0');
-
-  return `${days}D ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-}
+import { useSystemUptime } from './useSystemUptime';
 
 export function SystemReadout() {
-  const startTimeRef = useRef(Date.now());
-  const [elapsedMs, setElapsedMs] = useState(0);
-
-  useEffect(() => {
-    const updateUptime = () => setElapsedMs(Date.now() - startTimeRef.current);
-    const intervalId = window.setInterval(updateUptime, UPTIME_INTERVAL_MS);
-
-    updateUptime();
-
-    return () => {
-      window.clearInterval(intervalId);
-    };
-  }, []);
+  const uptime = useSystemUptime();
 
   return (
     <aside
@@ -46,7 +21,7 @@ export function SystemReadout() {
           </div>
           <div>
             <dt className="sr-only">Uptime</dt>
-            <dd>UPTIME: {formatUptime(elapsedMs)}</dd>
+            <dd>UPTIME: {uptime}</dd>
           </div>
         </dl>
       </section>

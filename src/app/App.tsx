@@ -8,6 +8,7 @@ import { ResponsivePage } from '../components/layout/ResponsivePage';
 import { SiteShell } from '../components/layout/SiteShell';
 import { useBackgroundAudio } from '../components/layout/useBackgroundAudio';
 import { MovieLibrary } from '../components/library/MovieLibrary';
+import { MobileHomeLandscape, MobileHomePortrait } from '../components/signal/MobileHome';
 import { SignalMonitorNav } from '../components/signal/SignalMonitorNav';
 import { IdentityBody } from '../components/system/IdentityBody';
 import { SystemReadout } from '../components/system/SystemReadout';
@@ -118,6 +119,16 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
   const desktopFallbackPage = (
     <DesktopPageContent renderedHash={activeHash} activeNavId={null} onActiveNavChange={() => undefined} />
   );
+  const mobilePortraitPage = activeHash === '' ? (
+    <MobileHomePortrait />
+  ) : (
+    <MobilePageFallback orientation="portrait">{desktopFallbackPage}</MobilePageFallback>
+  );
+  const mobileLandscapePage = activeHash === '' ? (
+    <MobileHomeLandscape />
+  ) : (
+    <MobilePageFallback orientation="landscape">{desktopFallbackPage}</MobilePageFallback>
+  );
 
   return (
     <MobileShell
@@ -132,8 +143,8 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
       <ResponsivePage
         mode={layoutMode}
         desktop={desktopFallbackPage}
-        mobilePortrait={<MobilePageFallback orientation="portrait">{desktopFallbackPage}</MobilePageFallback>}
-        mobileLandscape={<MobilePageFallback orientation="landscape">{desktopFallbackPage}</MobilePageFallback>}
+        mobilePortrait={mobilePortraitPage}
+        mobileLandscape={mobileLandscapePage}
       />
     </MobileShell>
   );

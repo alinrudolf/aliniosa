@@ -344,9 +344,21 @@ type SignalMonitorNavProps = {
   activeNavId: string | null;
   onActiveNavChange: (id: string | null) => void;
   embedded?: boolean;
+  className?: string;
+  decorative?: boolean;
+  preserveAspectRatio?: string;
+  viewBox?: string;
 };
 
-export function SignalMonitorNav({ activeNavId, onActiveNavChange, embedded = false }: SignalMonitorNavProps) {
+export function SignalMonitorNav({
+  activeNavId,
+  onActiveNavChange,
+  embedded = false,
+  className = '',
+  decorative = false,
+  preserveAspectRatio = 'none',
+  viewBox = `0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`,
+}: SignalMonitorNavProps) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const activeNavIndexRef = useRef(-1);
   const pathRefs = useRef<Array<SVGPathElement | null>>([]);
@@ -474,8 +486,9 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange, embedded = fa
     <section
       className={`relative h-full min-h-0 w-full overflow-visible bg-[color:var(--bg-crt)] text-[color:var(--amber-base)] ${
         embedded ? '' : 'border border-[color:var(--amber-dim)]'
-      }`}
-      aria-label="Secondary signal navigation"
+      } ${className}`}
+      aria-label={decorative ? undefined : 'Secondary signal navigation'}
+      aria-hidden={decorative ? true : undefined}
     >
       {embedded ? null : (
         <span className="absolute right-[var(--space-8)] top-0 z-10 -translate-y-1/2 bg-[color:var(--bg-crt)] px-[var(--space-2)] font-mono text-[length:var(--font-xs)] uppercase tracking-[0.14em] text-[color:var(--amber-core)]">
@@ -485,11 +498,12 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange, embedded = fa
       <div className="h-full overflow-hidden">
         <svg
           ref={svgRef}
-          viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
+          viewBox={viewBox}
           className="block h-full w-full"
-          preserveAspectRatio="none"
-          role="img"
-          aria-label="Overlapping navigation signal waveforms"
+          preserveAspectRatio={preserveAspectRatio}
+          role={decorative ? undefined : 'img'}
+          aria-label={decorative ? undefined : 'Overlapping navigation signal waveforms'}
+          focusable={decorative ? 'false' : undefined}
         >
           {terrainRows.map((row) => {
             const path = makeWavePath(row, INITIAL_WAVE_FRAME, 1);
@@ -510,7 +524,7 @@ export function SignalMonitorNav({ activeNavId, onActiveNavChange, embedded = fa
               />
             );
           })}
-          {navigationRegions.map((zone) => {
+          {decorative ? null : navigationRegions.map((zone) => {
             return (
               <a
                 key={zone.id}
