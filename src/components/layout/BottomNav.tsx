@@ -1,4 +1,4 @@
-import { type MouseEvent, useEffect, useRef, useState } from 'react';
+import { type MouseEvent } from 'react';
 import { bottomNavigation, type BottomNavigationItem } from '../../data/navigation';
 import { TerminalTextSwap } from './TerminalTextSwap';
 
@@ -20,22 +20,13 @@ const navigationHoverLabels: Record<string, string> = {
   CNT: '[CON]',
 };
 
-const BACKGROUND_AUDIO_SRC = `${import.meta.env.BASE_URL}audio/bg-audio.mp3`;
-const BACKGROUND_AUDIO_STORAGE_KEY = 'backgroundAudioEnabled';
-
-function storeBackgroundAudioPreference(isEnabled: boolean) {
-  try {
-    localStorage.setItem(BACKGROUND_AUDIO_STORAGE_KEY, String(isEnabled));
-  } catch {
-    // Audio preference persistence is optional.
-  }
-}
-
 type BottomNavProps = {
   activeNavId?: string | null;
   hoverNavId?: string | null;
+  isAudioEnabled: boolean;
   onActiveNavClick: () => void;
   onActiveNavChange: (id: string | null) => void;
+  onAudioToggle: () => void;
   onNavItemClick?: (context: {
     event: MouseEvent<HTMLAnchorElement>;
     isActive: boolean;
@@ -47,45 +38,13 @@ type BottomNavProps = {
 export function BottomNav({
   activeNavId = null,
   hoverNavId = null,
+  isAudioEnabled,
   onActiveNavClick,
   onActiveNavChange,
+  onAudioToggle,
   onNavItemClick,
 }: BottomNavProps) {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [isAudioEnabled, setIsAudioEnabled] = useState(false);
   const navigationLabel = hoverNavId ? navigationHoverLabels[hoverNavId] ?? '[NAVIGATION]' : '[NAVIGATION]';
-
-  useEffect(() => {
-    return () => {
-      audioRef.current?.pause();
-    };
-  }, []);
-
-  const toggleBackgroundAudio = () => {
-    if (isAudioEnabled) {
-      audioRef.current?.pause();
-      storeBackgroundAudioPreference(false);
-      setIsAudioEnabled(false);
-
-      return;
-    }
-
-    const audio = audioRef.current ?? new Audio(BACKGROUND_AUDIO_SRC);
-
-    audioRef.current = audio;
-    audio.loop = true;
-    audio.volume = 0.15;
-
-    setIsAudioEnabled(true);
-    storeBackgroundAudioPreference(true);
-
-    audio.play().catch((error: unknown) => {
-      console.warn('Background audio playback failed.', error);
-      audio.pause();
-      storeBackgroundAudioPreference(false);
-      setIsAudioEnabled(false);
-    });
-  };
 
   return (
     <section className="shrink-0 overflow-hidden border-t border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)]">
@@ -97,7 +56,7 @@ export function BottomNav({
           type="button"
           aria-label={isAudioEnabled ? 'Disable background audio' : 'Enable background audio'}
           aria-pressed={isAudioEnabled}
-          onClick={toggleBackgroundAudio}
+          onClick={onAudioToggle}
           className="grid h-[var(--bottom-nav-button-size)] w-[var(--bottom-nav-button-size)] grid-cols-[var(--audio-status-dot-column)_var(--audio-icon-column)] items-center justify-end gap-[var(--space-2)] bg-[color:var(--bg-crt)] text-[color:var(--amber-base)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--amber-core)]"
         >
           <span

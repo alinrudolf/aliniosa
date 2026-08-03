@@ -54,6 +54,9 @@
   --audio-status-dot-size: calc(0.375rem * var(--ui-scale));
   --audio-status-dot-column: calc(0.5rem * var(--ui-scale));
   --audio-icon-column: calc(1rem * var(--ui-scale));
+  --mobile-header-height: 4rem;
+  --mobile-logo-size: 2rem;
+  --mobile-shell-padding-x: 1rem;
 
   --readout-width: calc(40rem * var(--ui-scale));
   --readout-column-width: calc(18.75rem * var(--ui-scale));

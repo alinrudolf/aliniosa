@@ -1,13 +1,5 @@
 import type { SiteHeader } from '../../data/navigation';
-import logoSvg from '../../assets/images/Logo AI Amber Accurate.svg?raw';
-
-const inlineLogoSvg = logoSvg
-  .replace(/<\?xml[^>]*>\s*/, '')
-  .replace('<svg ', '<svg viewBox="0 0 441 450" preserveAspectRatio="xMidYMid meet" ')
-  .replace(/<path[^>]*transform="translate\(173\.24412536621094,-0\.267425537109375\)"\/>\s*/g, '')
-  .replace(/<path[^>]*transform="translate\((3|314),435\)"\/>\s*/g, '')
-  .replace(/<path[^>]*transform="translate\((12|305),409\)"\/>\s*/g, '')
-  .replace(/fill="#B29241"/g, 'fill="currentColor"');
+import { LogoMark } from './LogoMark';
 
 type HeaderModuleProps = {
   header: SiteHeader;
@@ -34,11 +26,9 @@ export function HeaderModule({ header, embedded = false, compact = false }: Head
       )}
       <div className={identityGroupClass}>
         <div className={logoFrameClass}>
-          <span
+          <LogoMark
             className="header-logo-mark block h-[var(--header-logo-size)] w-[var(--header-logo-size)] text-[color:var(--amber-base)]"
-            role="img"
-            aria-label={header.logoAlt}
-            dangerouslySetInnerHTML={{ __html: inlineLogoSvg }}
+            label={header.logoAlt}
           />
           {embedded ? <span className="crt-divider-line ml-[var(--space-6)] h-[var(--header-logo-size)] w-px" aria-hidden="true" /> : null}
         </div>

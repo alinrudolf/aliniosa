@@ -1,19 +1,145 @@
 import { type ComponentProps, useEffect, useRef, useState } from 'react';
 import { BottomNav } from '../components/layout/BottomNav';
 import { HeaderModule } from '../components/layout/HeaderModule';
+import { MobilePageFallback } from '../components/layout/MobilePageFallback';
+import { MobileShell } from '../components/layout/MobileShell';
 import { PageTransitionOverlay, type PageTransitionRect, type PageTransitionState } from '../components/layout/PageTransitionOverlay';
+import { ResponsivePage } from '../components/layout/ResponsivePage';
 import { SiteShell } from '../components/layout/SiteShell';
+import { useBackgroundAudio } from '../components/layout/useBackgroundAudio';
 import { MovieLibrary } from '../components/library/MovieLibrary';
 import { SignalMonitorNav } from '../components/signal/SignalMonitorNav';
 import { IdentityBody } from '../components/system/IdentityBody';
 import { SystemReadout } from '../components/system/SystemReadout';
 import { movies } from '../data/movies';
-import { bottomNavigation, signalMonitorLabel, siteHeader } from '../data/navigation';
+import { bottomNavigation, navigation, signalMonitorLabel, siteHeader } from '../data/navigation';
 import { HoverTextureExport } from './HoverTextureExport';
 import { TerrainPreviewField } from './TerrainPreviewField';
 import { TerrainPreview } from './TerrainPreview';
+import { type ViewportLayoutMode } from './viewportLayout';
+import { useViewportLayout } from './useViewportLayout';
 
 export function App() {
+  if (window.location.pathname === '/terrain-preview') {
+    return <TerrainPreview />;
+  }
+
+  if (window.location.pathname === '/terrain-preview-2') {
+    return <TerrainPreviewField />;
+  }
+
+  if (window.location.pathname === '/hover-texture-export') {
+    return <HoverTextureExport />;
+  }
+
+  return <ResponsiveSite />;
+}
+
+function ResponsiveSite() {
+  const layoutMode = useViewportLayout();
+  const audio = useBackgroundAudio();
+
+  if (layoutMode === 'desktop') {
+    return (
+      <DesktopSite
+        isAudioEnabled={audio.isAudioEnabled}
+        onAudioToggle={audio.toggleBackgroundAudio}
+      />
+    );
+  }
+
+  return (
+    <MobileSite
+      layoutMode={layoutMode}
+      isAudioEnabled={audio.isAudioEnabled}
+      onAudioToggle={audio.toggleBackgroundAudio}
+    />
+  );
+}
+
+type AudioControls = {
+  isAudioEnabled: boolean;
+  onAudioToggle: () => void;
+};
+
+function DesktopPageContent({
+  renderedHash,
+  activeNavId,
+  onActiveNavChange,
+}: {
+  renderedHash: string | null;
+  activeNavId: string | null;
+  onActiveNavChange: (id: string | null) => void;
+}) {
+  const isSystemRendered = renderedHash === '#system';
+  const isLibraryRendered = renderedHash === '#library';
+
+  if (isSystemRendered) {
+    return <IdentityBody />;
+  }
+
+  if (isLibraryRendered) {
+    return <MovieLibrary movies={movies} />;
+  }
+
+  if (renderedHash === null) {
+    return null;
+  }
+
+  return <SignalMonitorNav activeNavId={activeNavId} onActiveNavChange={onActiveNavChange} embedded />;
+}
+
+function getMobilePageTitle(activeHash: string) {
+  return navigation.find((item) => item.href === activeHash)?.label.toUpperCase() ?? 'ROOT';
+}
+
+function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls & {
+  layoutMode: Extract<ViewportLayoutMode, 'mobile-portrait' | 'mobile-landscape'>;
+}) {
+  const [activeHash, setActiveHash] = useState(() => window.location.hash);
+
+  useEffect(() => {
+    const updateActiveHash = () => {
+      setActiveHash(window.location.hash);
+    };
+
+    window.addEventListener('hashchange', updateActiveHash);
+
+    return () => {
+      window.removeEventListener('hashchange', updateActiveHash);
+    };
+  }, []);
+
+  const returnToRestState = () => {
+    window.history.pushState(null, '', `${window.location.pathname}${window.location.search}`);
+    setActiveHash('');
+  };
+
+  const desktopFallbackPage = (
+    <DesktopPageContent renderedHash={activeHash} activeNavId={null} onActiveNavChange={() => undefined} />
+  );
+
+  return (
+    <MobileShell
+      layoutMode={layoutMode}
+      header={siteHeader}
+      pageTitle={getMobilePageTitle(activeHash)}
+      activeHash={activeHash}
+      isAudioEnabled={isAudioEnabled}
+      onAudioToggle={onAudioToggle}
+      onActiveNavClick={returnToRestState}
+    >
+      <ResponsivePage
+        mode={layoutMode}
+        desktop={desktopFallbackPage}
+        mobilePortrait={<MobilePageFallback orientation="portrait">{desktopFallbackPage}</MobilePageFallback>}
+        mobileLandscape={<MobilePageFallback orientation="landscape">{desktopFallbackPage}</MobilePageFallback>}
+      />
+    </MobileShell>
+  );
+}
+
+function DesktopSite({ isAudioEnabled, onAudioToggle }: AudioControls) {
   const mainRef = useRef<HTMLElement | null>(null);
   const pendingOpenTransitionRef = useRef<{ hash: string; sourceRect: PageTransitionRect } | null>(null);
   const transitionCompletionRef = useRef<(() => void) | null>(null);
@@ -26,7 +152,6 @@ export function App() {
   const activeNavId = topNavActiveNavId ?? waveformActiveNavId;
   const activeHashNavId = bottomNavigation.find((item) => item.href === activeHash)?.id ?? null;
   const isSystemActive = activeHash === '#system';
-  const isSystemRendered = renderedHash === '#system';
   const isLibraryActive = activeHash === '#library';
   const isLibraryRendered = renderedHash === '#library';
   const isContentPageActive = isSystemActive || isLibraryActive;
@@ -130,18 +255,6 @@ export function App() {
     });
   }, [activeHash]);
 
-  if (window.location.pathname === '/terrain-preview') {
-    return <TerrainPreview />;
-  }
-
-  if (window.location.pathname === '/terrain-preview-2') {
-    return <TerrainPreviewField />;
-  }
-
-  if (window.location.pathname === '/hover-texture-export') {
-    return <HoverTextureExport />;
-  }
-
   return (
     <SiteShell>
       <section className="relative flex h-full min-h-0 w-full flex-col overflow-visible border border-[color:var(--amber-dim)] bg-[color:var(--bg-crt)] text-[color:var(--amber-base)]">
@@ -160,13 +273,11 @@ export function App() {
           </span>
         ) : null}
         <main ref={mainRef} className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto">
-          {isSystemRendered ? (
-            <IdentityBody />
-          ) : isLibraryRendered ? (
-            <MovieLibrary movies={movies} />
-          ) : renderedHash === null ? null : (
-            <SignalMonitorNav activeNavId={activeNavId} onActiveNavChange={setWaveformActiveNavId} embedded />
-          )}
+          <DesktopPageContent
+            renderedHash={renderedHash}
+            activeNavId={activeNavId}
+            onActiveNavChange={setWaveformActiveNavId}
+          />
         </main>
         {pageTransition ? (
           <PageTransitionOverlay key={pageTransition.id} transition={pageTransition} onComplete={completePageTransition} />
@@ -174,8 +285,10 @@ export function App() {
         <BottomNav
           activeNavId={activeHashNavId}
           hoverNavId={activeNavId}
+          isAudioEnabled={isAudioEnabled}
           onActiveNavChange={setTopNavActiveNavId}
           onActiveNavClick={returnToRestState}
+          onAudioToggle={onAudioToggle}
           onNavItemClick={handleBottomNavItemClick}
         />
       </section>
