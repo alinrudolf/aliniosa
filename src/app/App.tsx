@@ -7,6 +7,7 @@ import { PageTransitionOverlay, type PageTransitionRect, type PageTransitionStat
 import { ResponsivePage } from '../components/layout/ResponsivePage';
 import { SiteShell } from '../components/layout/SiteShell';
 import { useBackgroundAudio } from '../components/layout/useBackgroundAudio';
+import { MobileLibrary, type MobileLibraryViewMode } from '../components/library/MobileLibrary';
 import { MovieLibrary } from '../components/library/MovieLibrary';
 import { MobileHomeLandscape, MobileHomePortrait } from '../components/signal/MobileHome';
 import { SignalMonitorNav } from '../components/signal/SignalMonitorNav';
@@ -98,6 +99,8 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
   layoutMode: Extract<ViewportLayoutMode, 'mobile-portrait' | 'mobile-landscape'>;
 }) {
   const [activeHash, setActiveHash] = useState(() => window.location.hash);
+  const [mobileLibrarySelectedMovieIndex, setMobileLibrarySelectedMovieIndex] = useState(0);
+  const [mobileLibraryViewMode, setMobileLibraryViewMode] = useState<MobileLibraryViewMode>('list');
 
   useEffect(() => {
     const updateActiveHash = () => {
@@ -116,16 +119,51 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
     setActiveHash('');
   };
 
+  useEffect(() => {
+    if (activeHash !== '#library') {
+      setMobileLibraryViewMode('list');
+    }
+  }, [activeHash]);
+
+  const mobileLibraryPageTitle =
+    mobileLibraryViewMode === 'details'
+      ? `LIBRARY / RECORD ${String(mobileLibrarySelectedMovieIndex + 1).padStart(2, '0')}`
+      : 'LIBRARY';
+
+  const mobileLibraryPortraitPage = (
+    <MobileLibrary
+      movies={movies}
+      orientation="portrait"
+      selectedMovieIndex={mobileLibrarySelectedMovieIndex}
+      viewMode={mobileLibraryViewMode}
+      onSelectedMovieIndexChange={setMobileLibrarySelectedMovieIndex}
+      onViewModeChange={setMobileLibraryViewMode}
+    />
+  );
+  const mobileLibraryLandscapePage = (
+    <MobileLibrary
+      movies={movies}
+      orientation="landscape"
+      selectedMovieIndex={mobileLibrarySelectedMovieIndex}
+      viewMode={mobileLibraryViewMode}
+      onSelectedMovieIndexChange={setMobileLibrarySelectedMovieIndex}
+      onViewModeChange={setMobileLibraryViewMode}
+    />
+  );
   const desktopFallbackPage = (
     <DesktopPageContent renderedHash={activeHash} activeNavId={null} onActiveNavChange={() => undefined} />
   );
   const mobilePortraitPage = activeHash === '' ? (
     <MobileHomePortrait />
+  ) : activeHash === '#library' ? (
+    mobileLibraryPortraitPage
   ) : (
     <MobilePageFallback orientation="portrait">{desktopFallbackPage}</MobilePageFallback>
   );
   const mobileLandscapePage = activeHash === '' ? (
     <MobileHomeLandscape />
+  ) : activeHash === '#library' ? (
+    mobileLibraryLandscapePage
   ) : (
     <MobilePageFallback orientation="landscape">{desktopFallbackPage}</MobilePageFallback>
   );
@@ -134,7 +172,7 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
     <MobileShell
       layoutMode={layoutMode}
       header={siteHeader}
-      pageTitle={getMobilePageTitle(activeHash)}
+      pageTitle={activeHash === '#library' ? mobileLibraryPageTitle : getMobilePageTitle(activeHash)}
       activeHash={activeHash}
       isAudioEnabled={isAudioEnabled}
       onAudioToggle={onAudioToggle}
