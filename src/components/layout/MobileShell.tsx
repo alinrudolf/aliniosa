@@ -140,7 +140,7 @@ export function MobileShell({
     >
       <MobileHeader
         header={header}
-        pageTitle={pageTitle}
+        pageTitle={isNavOpen ? 'NAVIGATION' : pageTitle}
         isMenuOpen={isNavOpen}
         menuButtonRef={menuButtonRef}
         menuPanelId={menuPanelId}
