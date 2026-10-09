@@ -7,6 +7,7 @@ import { PageTransitionOverlay, type PageTransitionRect, type PageTransitionStat
 import { ResponsivePage } from '../components/layout/ResponsivePage';
 import { SiteShell } from '../components/layout/SiteShell';
 import { useBackgroundAudio } from '../components/layout/useBackgroundAudio';
+import { InstallationModule } from '../components/installations/InstallationModule';
 import { MobileLibrary, type MobileLibraryViewMode } from '../components/library/MobileLibrary';
 import { MovieLibrary } from '../components/library/MovieLibrary';
 import { MobileHomeLandscape, MobileHomePortrait } from '../components/signal/MobileHome';
@@ -14,6 +15,7 @@ import { SignalMonitorNav } from '../components/signal/SignalMonitorNav';
 import { IdentityBody } from '../components/system/IdentityBody';
 import { SystemReadout } from '../components/system/SystemReadout';
 import { movies } from '../data/movies';
+import { installations } from '../data/installations';
 import { bottomNavigation, navigation, signalMonitorLabel, siteHeader } from '../data/navigation';
 import { HoverTextureExport } from './HoverTextureExport';
 import { TerrainPreviewField } from './TerrainPreviewField';
@@ -68,10 +70,15 @@ function DesktopPageContent({
   renderedHash,
   activeNavId,
   onActiveNavChange,
+  installationSelection,
 }: {
   renderedHash: string | null;
   activeNavId: string | null;
   onActiveNavChange: (id: string | null) => void;
+  installationSelection?: {
+    index: number;
+    onSelect: (direction: -1 | 1) => void;
+  };
 }) {
   const isSystemRendered = renderedHash === '#system';
   const isLibraryRendered = renderedHash === '#library';
@@ -82,6 +89,11 @@ function DesktopPageContent({
 
   if (isLibraryRendered) {
     return <MovieLibrary movies={movies} />;
+  }
+
+  // Only DesktopSite supplies selection; mobile retains its existing fallback.
+  if (renderedHash === '#installations' && installationSelection) {
+    return <InstallationModule installation={installations[installationSelection.index]} onSelect={installationSelection.onSelect} />;
   }
 
   if (renderedHash === null) {
@@ -198,12 +210,17 @@ function DesktopSite({ isAudioEnabled, onAudioToggle }: AudioControls) {
   const [topNavActiveNavId, setTopNavActiveNavId] = useState<string | null>(null);
   const [waveformActiveNavId, setWaveformActiveNavId] = useState<string | null>(null);
   const [pageTransition, setPageTransition] = useState<PageTransitionState | null>(null);
+  const [selectedInstallationIndex, setSelectedInstallationIndex] = useState(0);
   const activeNavId = topNavActiveNavId ?? waveformActiveNavId;
   const activeHashNavId = bottomNavigation.find((item) => item.href === activeHash)?.id ?? null;
   const isSystemActive = activeHash === '#system';
   const isLibraryActive = activeHash === '#library';
   const isLibraryRendered = renderedHash === '#library';
-  const isContentPageActive = isSystemActive || isLibraryActive;
+  const isContentPageActive = isSystemActive || isLibraryActive || activeHash === '#installations';
+
+  const selectInstallation = (direction: -1 | 1) => {
+    setSelectedInstallationIndex((index) => (index + direction + installations.length) % installations.length);
+  };
 
   const isReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -326,6 +343,7 @@ function DesktopSite({ isAudioEnabled, onAudioToggle }: AudioControls) {
             renderedHash={renderedHash}
             activeNavId={activeNavId}
             onActiveNavChange={setWaveformActiveNavId}
+            installationSelection={{ index: selectedInstallationIndex, onSelect: selectInstallation }}
           />
         </main>
         {pageTransition ? (

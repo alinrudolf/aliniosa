@@ -95,9 +95,7 @@ a {
 
 .bottom-nav-item {
   --nav-hover-bg: rgba(255, 176, 0, 0.095);
-  --nav-active-bg: rgba(255, 176, 0, 0.17);
   --nav-hover-glow: inset 0 0 0 1px rgba(255, 201, 74, 0.24), inset 0 0 14px rgba(255, 176, 0, 0.18);
-  --nav-active-glow: inset 0 0 0 1px rgba(255, 201, 74, 0.36), inset 0 0 18px rgba(255, 176, 0, 0.28);
   isolation: isolate;
 }
 
@@ -130,7 +128,8 @@ a {
   box-shadow: var(--nav-hover-glow);
 }
 
-.bottom-nav-active-layer {
+.bottom-nav-active-layer,
+.installation-illustration-viewport {
   background:
     repeating-linear-gradient(
       to bottom,
@@ -385,6 +384,11 @@ a {
   isolation: isolate;
 }
 
+.installation-info-panel {
+  align-self: flex-start;
+  max-height: var(--identity-avatar-panel-max);
+}
+
 @media (min-height: 1081px) {
   .identity-avatar-panel {
     max-width: none;
@@ -393,6 +397,10 @@ a {
   .identity-avatar-frame {
     width: min(100cqw, 100cqh);
     height: min(100cqw, 100cqh);
+  }
+
+  .installation-info-panel {
+    max-height: none;
   }
 }
 
@@ -526,12 +534,62 @@ a {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--space-10);
   padding: var(--space-4);
-  border-top: 1px dashed var(--amber-base);
-  border-bottom: 1px dashed var(--amber-base);
   font-family: var(--font-family-mono);
   font-size: var(--font-base);
   line-height: 1.32;
   color: var(--amber-base);
+}
+
+.identity-status-grid,
+.installation-title-row {
+  border-top: 1px dashed var(--amber-base);
+  border-bottom: 1px dashed var(--amber-base);
+}
+
+.installation-title-row {
+  display: flex;
+  flex-shrink: 0;
+  height: var(--installation-title-row-height);
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding-inline: var(--space-4);
+}
+
+.installation-chevron {
+  display: grid;
+  width: var(--installation-chevron-size);
+  height: var(--installation-chevron-size);
+  place-items: center;
+  border: 1px solid var(--amber-base);
+  background: var(--bg-crt);
+  color: var(--amber-base);
+}
+
+.installation-chevron:hover {
+  border-color: var(--amber-core);
+  color: var(--amber-core);
+}
+
+.installation-chevron:focus-visible {
+  outline: 1px solid var(--amber-core);
+  outline-offset: 4px;
+}
+
+.installation-description-scroll {
+  justify-content: flex-start;
+  margin-top: var(--space-6);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-base);
+  line-height: 1.32;
+}
+
+.installation-description-scroll > dl {
+  flex-shrink: 0;
+}
+
+.installation-copy {
+  gap: var(--space-4);
 }
 
 .identity-status-column {

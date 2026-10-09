@@ -18,6 +18,8 @@
   --glow-text-soft: var(--crt-text-shadow);
   --glow-svg: var(--crt-line-glow);
   --ui-scale: clamp(1, calc(100vh / 1080px), 1.35);
+  --nav-active-bg: rgba(255, 176, 0, 0.17);
+  --nav-active-glow: inset 0 0 0 1px rgba(255, 201, 74, 0.36), inset 0 0 18px rgba(255, 176, 0, 0.28);
 
   --space-1: calc(0.25rem * var(--ui-scale));
   --space-2: calc(0.5rem * var(--ui-scale));
@@ -70,6 +72,8 @@
   --identity-avatar-corner-size: calc(1.5rem * var(--ui-scale));
   --identity-status-label-width: calc(8.5rem * var(--ui-scale));
   --identity-waveform-height: calc(8.875rem * var(--ui-scale));
+  --installation-title-row-height: calc(4.625rem * var(--ui-scale));
+  --installation-chevron-size: calc(2.625rem * var(--ui-scale));
 
   --library-card-height: calc(29.875rem * var(--ui-scale));
   --library-card-min-height: calc(22rem * var(--ui-scale));
