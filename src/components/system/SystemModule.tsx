@@ -12,12 +12,12 @@ type SystemModuleProps = {
   id: string;
   moduleId: string;
   status: string;
-  title: string;
+  title: ReactNode;
   blocks: SystemModuleBlock[];
   command?: string;
   panel?: {
     controls: ReactNode;
-    externalLink: { label: string; href: string };
+    externalLink: { label: ReactNode; href: string };
   };
 };
 

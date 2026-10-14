@@ -1,4 +1,5 @@
 import { installationLabels, type Installation } from '../../data/installations';
+import { useTerminalTextSwap } from '../layout/TerminalTextSwap';
 import { SystemModule } from '../system/SystemModule';
 
 type InstallationModuleProps = {
@@ -6,7 +7,34 @@ type InstallationModuleProps = {
   onSelect: (direction: -1 | 1) => void;
 };
 
+function InstallationText({ value, displayValue }: { value: string; displayValue: string }) {
+  return (
+    <span className="relative inline-grid max-w-full align-top">
+      <span className="sr-only">{value}</span>
+      <span className="invisible" aria-hidden="true">{value}</span>
+      <span className="absolute inset-0 overflow-hidden" aria-hidden="true">{displayValue}</span>
+    </span>
+  );
+}
+
 export function InstallationModule({ installation, onSelect }: InstallationModuleProps) {
+  // Keep animation state above SystemModule's keyed scroll container. Its remount
+  // resets scrolling without resetting the text swaps on each selection.
+  const { displayValue: displayedTitle } = useTerminalTextSwap(installation.title, installation.id);
+  const { displayValue: displayedDescription } = useTerminalTextSwap(installation.paragraphs.join(''), installation.id);
+  const { displayValue: displayedLink } = useTerminalTextSwap(installation.link.label, installation.id);
+  let paragraphOffset = 0;
+  const paragraphs = installation.paragraphs.map((paragraph) => {
+    const displayValue = displayedDescription.slice(paragraphOffset, paragraphOffset + paragraph.length);
+    paragraphOffset += paragraph.length;
+
+    return (
+      <p key={paragraph}>
+        <InstallationText value={paragraph} displayValue={displayValue} />
+      </p>
+    );
+  });
+
   return (
     <section className="identity-page-content" aria-label={installation.title}>
       <div className="identity-avatar-panel">
@@ -22,12 +50,12 @@ export function InstallationModule({ installation, onSelect }: InstallationModul
         id={`installation-${installation.id}`}
         moduleId={installation.identifier}
         status={installationLabels.status}
-        title={installation.title}
+        title={<InstallationText value={installation.title} displayValue={displayedTitle} />}
         blocks={[{
           label: installationLabels.description,
           value: (
             <div className="identity-copy installation-copy">
-              {installation.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+              {paragraphs}
             </div>
           ),
         }]}
@@ -46,7 +74,10 @@ export function InstallationModule({ installation, onSelect }: InstallationModul
               </button>
             </div>
           ),
-          externalLink: installation.link,
+          externalLink: {
+            ...installation.link,
+            label: <InstallationText value={installation.link.label} displayValue={displayedLink} />,
+          },
         }}
       />
     </section>
