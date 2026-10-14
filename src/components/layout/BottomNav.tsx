@@ -4,7 +4,7 @@ import { TerminalTextSwap } from './TerminalTextSwap';
 
 const navigationDisplay: Record<string, { index: string; title: string; subtitle: string }> = {
   SYS: { index: '01', title: 'IDENTITY', subtitle: 'Human Component' },
-  WRK: { index: '02', title: 'WORK', subtitle: 'Selected Projects' },
+  WRK: { index: '02', title: 'WORK', subtitle: 'Selected Work' },
   INS: { index: '03', title: 'INSTALLATIONS', subtitle: 'Physical & Digital' },
   LIB: { index: '04', title: 'LIBRARY', subtitle: 'Media Recommendations' },
   LOG: { index: '05', title: 'LOGS', subtitle: 'Notes & Writings' },

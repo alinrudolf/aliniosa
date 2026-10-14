@@ -4,6 +4,42 @@ export type WorkRecord = {
   value: string;
 };
 
+export const workPage = {
+  label: 'Work',
+  navigationLabel: 'Work chapters',
+  documentLabel: 'Work chapter document',
+  status: 'Indexed',
+  summaryLabel: 'Summary',
+  bodyLabel: 'Details',
+  introduction: [
+    'My work sits between complicated systems and the people expected to use them.',
+    'I help decide what a product needs to do, how its parts fit together, and which problems are worth solving. The contexts change; the questions are often similar.',
+  ],
+};
+
+export const workChapters = [
+  {
+    id: 'research', number: '01', title: 'AI & RESEARCH', organization: 'TOLUNA',
+    introduction: 'Helping researchers work with data through conversation.',
+    body: "At Toluna, I define conversational AI workflows for exploring survey data and assembling reports. Much of the work is about the boundaries: what the system can support with evidence, what it shouldn't infer, and how a useful suggestion becomes a concrete action.",
+  },
+  {
+    id: 'creator-tools', number: '02', title: 'CREATOR TOOLS', organization: 'THE SANDBOX',
+    introduction: 'Making production less cumbersome.',
+    body: 'I worked on systems for creating, configuring, and publishing digital assets. The most meaningful improvements often came from reducing the number of steps or ways a process could fail. One production workflow that used to take days was brought down to hours.',
+  },
+  {
+    id: 'early-stage', number: '03', title: 'EARLY-STAGE SYSTEMS', organization: 'TASKAST / QED BUILDERS',
+    introduction: 'Testing ideas before treating them as products.',
+    body: 'That has included AI agents reacting to live information and, more recently, forecasting what AI coding agents might need before they run. This work is about translating technical possibilities into specific use cases, constraints, and things that can actually be tested.',
+  },
+  {
+    id: 'live-platforms', number: '04', title: 'LIVE PLATFORMS', organization: 'RAIN DIGITAL',
+    introduction: 'Digital systems under real-world deadlines.',
+    body: 'Earlier, I worked on live scoring, streaming, and content delivery for international tennis events. When an event is underway, reliability matters more than an elaborate feature set. That experience still informs how I approach products.',
+  },
+] as const;
+
 export const systemRecords: WorkRecord[] = [
   {
     id: 'system-01',

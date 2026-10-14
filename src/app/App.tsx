@@ -14,6 +14,7 @@ import { MobileHomeLandscape, MobileHomePortrait } from '../components/signal/Mo
 import { SignalMonitorNav } from '../components/signal/SignalMonitorNav';
 import { IdentityBody } from '../components/system/IdentityBody';
 import { SystemReadout } from '../components/system/SystemReadout';
+import { WorkPage } from '../components/system/WorkPage';
 import { movies } from '../data/movies';
 import { installations } from '../data/installations';
 import { bottomNavigation, navigation, signalMonitorLabel, siteHeader } from '../data/navigation';
@@ -71,10 +72,12 @@ function DesktopPageContent({
   activeNavId,
   onActiveNavChange,
   installationSelection,
+  isDesktop = false,
 }: {
   renderedHash: string | null;
   activeNavId: string | null;
   onActiveNavChange: (id: string | null) => void;
+  isDesktop?: boolean;
   installationSelection?: {
     index: number;
     onSelect: (direction: -1 | 1) => void;
@@ -89,6 +92,10 @@ function DesktopPageContent({
 
   if (isLibraryRendered) {
     return <MovieLibrary movies={movies} />;
+  }
+
+  if (renderedHash === '#work' && isDesktop) {
+    return <WorkPage />;
   }
 
   // Only DesktopSite supplies selection; mobile retains its existing fallback.
@@ -216,7 +223,7 @@ function DesktopSite({ isAudioEnabled, onAudioToggle }: AudioControls) {
   const isSystemActive = activeHash === '#system';
   const isLibraryActive = activeHash === '#library';
   const isLibraryRendered = renderedHash === '#library';
-  const isContentPageActive = isSystemActive || isLibraryActive || activeHash === '#installations';
+  const isContentPageActive = isSystemActive || isLibraryActive || activeHash === '#installations' || activeHash === '#work';
 
   const selectInstallation = (direction: -1 | 1) => {
     setSelectedInstallationIndex((index) => (index + direction + installations.length) % installations.length);
@@ -340,6 +347,7 @@ function DesktopSite({ isAudioEnabled, onAudioToggle }: AudioControls) {
         ) : null}
         <main ref={mainRef} className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto">
           <DesktopPageContent
+            isDesktop
             renderedHash={renderedHash}
             activeNavId={activeNavId}
             onActiveNavChange={setWaveformActiveNavId}
