@@ -1325,6 +1325,8 @@ a {
   .mobile-nav-panel :where(h1, h2, h3, p, a, span, dt, dd, button, li),
   .mobile-library-page,
   .mobile-library-page :where(h1, h2, h3, p, a, span, dt, dd, button, li),
+  .mobile-installations-page,
+  .mobile-installations-page :where(h1, h2, h3, p, a, span, dt, dd, button, li),
   .mobile-home,
   .mobile-home :where(h1, h2, h3, p, a, span, dt, dd, button, li) {
     text-shadow: none;
@@ -2568,6 +2570,119 @@ a {
   .mobile-shell[data-orientation='landscape'] .mobile-nav-position-contact {
     grid-column: 2;
     grid-row: 3;
+  }
+}
+
+@media (max-width: 768px), (orientation: landscape) and (max-height: 768px) and (pointer: coarse) {
+  .mobile-installations-page {
+    padding: var(--space-6) var(--space-10);
+    font-size: var(--font-base);
+    line-height: 1.32;
+  }
+
+  .mobile-installations-image-frame {
+    width: 100%;
+    aspect-ratio: 1;
+  }
+
+  .mobile-installations-page .identity-avatar-corner {
+    display: none;
+  }
+
+  .mobile-installations-title-row {
+    min-height: var(--space-16);
+  }
+
+  .mobile-installations-content .installation-chevron {
+    width: var(--space-8);
+    height: var(--space-8);
+  }
+
+  .mobile-installations-content:focus-visible {
+    outline: 1px solid var(--amber-core);
+    outline-offset: -1px;
+  }
+
+  .mobile-installations-description,
+  .mobile-installations-description .identity-copy {
+    font-size: var(--font-base);
+    overflow-wrap: anywhere;
+  }
+
+  .mobile-installations-description .library-imdb-link {
+    font-size: var(--font-base);
+  }
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  html:has(.mobile-installations-page),
+  body:has(.mobile-installations-page),
+  #root:has(.mobile-installations-page) {
+    height: auto;
+    min-height: 100%;
+    overflow: visible;
+  }
+
+  html:has(.mobile-installations-page) {
+    overflow-x: clip;
+    overflow-y: auto;
+  }
+
+  .mobile-shell:has(.mobile-installations-page) {
+    height: auto;
+    min-height: 100dvh;
+    grid-template-rows: auto auto;
+    overflow: visible;
+  }
+
+  .mobile-shell-main:has(.mobile-installations-page) {
+    overflow: visible;
+  }
+
+  html:has(.mobile-installations-page):has(.mobile-shell-nav-open),
+  body.mobile-nav-scroll-lock:has(.mobile-installations-page) {
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape), (orientation: landscape) and (max-height: 768px) and (pointer: coarse) {
+  .mobile-shell-main:has(.mobile-installations-page) {
+    overflow: hidden;
+  }
+
+  .mobile-installations-page {
+    display: flex;
+    height: 100%;
+    min-height: 0;
+    gap: var(--space-6);
+    padding: var(--space-6);
+    overflow: hidden;
+  }
+
+  .mobile-installations-image-panel {
+    flex: 0 0 auto;
+    height: 100%;
+    aspect-ratio: 1;
+  }
+
+  .mobile-installations-image-frame {
+    width: 100%;
+    height: 100%;
+  }
+
+  .mobile-installations-content {
+    flex: 1;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    overflow-anchor: none;
+    scrollbar-color: var(--amber-dim) transparent;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mobile-installations-description {
+    margin-top: var(--space-6);
   }
 }
 

@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from 'react';
 import { installationLabels, type Installation } from '../../data/installations';
 import { useTerminalTextSwap } from '../layout/TerminalTextSwap';
 import { SystemModule } from '../system/SystemModule';
@@ -5,6 +6,7 @@ import { SystemModule } from '../system/SystemModule';
 type InstallationModuleProps = {
   installation: Installation;
   onSelect: (direction: -1 | 1) => void;
+  mobile?: boolean;
 };
 
 function InstallationText({ value, displayValue }: { value: string; displayValue: string }) {
@@ -17,7 +19,18 @@ function InstallationText({ value, displayValue }: { value: string; displayValue
   );
 }
 
-export function InstallationModule({ installation, onSelect }: InstallationModuleProps) {
+export function InstallationModule({ installation, onSelect, mobile = false }: InstallationModuleProps) {
+  const contentRef = useRef<HTMLElement>(null);
+  useLayoutEffect(() => {
+    if (!mobile) return;
+
+    if (window.matchMedia('(orientation: portrait)').matches) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    } else if (contentRef.current) {
+      contentRef.current.scrollTop = 0;
+    }
+  }, [installation.id, mobile]);
+
   // Keep animation state above SystemModule's keyed scroll container. Its remount
   // resets scrolling without resetting the text swaps on each selection.
   const { displayValue: displayedTitle } = useTerminalTextSwap(installation.title, installation.id);
@@ -36,9 +49,9 @@ export function InstallationModule({ installation, onSelect }: InstallationModul
   });
 
   return (
-    <section className="identity-page-content" aria-label={installation.title}>
-      <div className="identity-avatar-panel">
-        <div className="identity-avatar-frame installation-illustration-viewport">
+    <section className={mobile ? 'mobile-installations-page grid min-w-0 gap-[var(--space-4)] font-mono' : 'identity-page-content'} aria-label={installation.title}>
+      <div className={mobile ? 'mobile-installations-image-panel min-h-0 min-w-0' : 'identity-avatar-panel'}>
+        <div className={`${mobile ? 'mobile-installations-image-frame' : 'identity-avatar-frame'} installation-illustration-viewport`}>
           <img key={installation.id} src={installation.image} alt={installation.imageAlt} className="identity-avatar-image" />
           <span className="identity-avatar-corner identity-avatar-corner-tl" aria-hidden="true" />
           <span className="identity-avatar-corner identity-avatar-corner-tr" aria-hidden="true" />
@@ -60,6 +73,8 @@ export function InstallationModule({ installation, onSelect }: InstallationModul
           ),
         }]}
         panel={{
+          mobile,
+          contentRef: mobile ? contentRef : undefined,
           controls: (
             <div className="flex shrink-0 gap-[var(--space-8)]">
               <button type="button" aria-label={installationLabels.previous} onClick={() => onSelect(-1)} className="installation-chevron">

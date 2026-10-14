@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactNode, Ref } from 'react';
 import { StatusBadge } from './StatusBadge';
 import { SystemBlock } from './SystemBlock';
 import { SystemCommand } from './SystemCommand';
@@ -17,6 +17,8 @@ type SystemModuleProps = {
   command?: string;
   document?: { active: boolean };
   panel?: {
+    mobile?: boolean;
+    contentRef?: Ref<HTMLElement>;
     controls: ReactNode;
     externalLink: { label: ReactNode; href: string };
   };
@@ -44,16 +46,16 @@ export function SystemModule({ id, moduleId, status, title, blocks, command, pan
 
   if (panel) {
     return (
-      <section id={id} className="identity-info-panel installation-info-panel" aria-labelledby={`${id}-title`}>
-        <span className="identity-info-label">{moduleId}</span>
+      <section ref={panel.contentRef} id={id} className={panel.mobile ? 'mobile-installations-content min-h-0 min-w-0' : 'identity-info-panel installation-info-panel'} aria-labelledby={`${id}-title`} tabIndex={panel.mobile ? 0 : undefined}>
+        <span className={panel.mobile ? 'sr-only' : 'identity-info-label'}>{moduleId}</span>
         <span className="sr-only"><StatusBadge status={status} /></span>
-        <div className="installation-title-row">
-          <h2 id={`${id}-title`} className="min-w-0 font-mono text-[length:var(--font-xl)] font-normal leading-tight">
+        <div className={panel.mobile ? 'mobile-installations-title-row flex items-center justify-between gap-[var(--space-2)] border-y border-dashed border-[color:var(--amber-base)] px-[var(--space-4)]' : 'installation-title-row'}>
+          <h2 id={`${id}-title`} className={`min-w-0 font-mono leading-tight ${panel.mobile ? 'text-[length:var(--font-lg)] font-bold' : 'text-[length:var(--font-xl)] font-normal'}`}>
             {title}
           </h2>
           {panel.controls}
         </div>
-        <div key={id} className="identity-info-scroll installation-description-scroll">
+        <div key={id} className={panel.mobile ? 'mobile-installations-description mt-[var(--space-4)] grid gap-[var(--space-4)]' : 'identity-info-scroll installation-description-scroll'}>
           <dl>
             {blocks.map((block) => (
               <div key={block.label}>

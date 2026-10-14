@@ -8,6 +8,7 @@ import { ResponsivePage } from '../components/layout/ResponsivePage';
 import { SiteShell } from '../components/layout/SiteShell';
 import { useBackgroundAudio } from '../components/layout/useBackgroundAudio';
 import { InstallationModule } from '../components/installations/InstallationModule';
+import { useInstallationSelection } from '../components/installations/useInstallationSelection';
 import { MobileLibrary, type MobileLibraryViewMode } from '../components/library/MobileLibrary';
 import { MovieLibrary } from '../components/library/MovieLibrary';
 import { MobileHomeLandscape, MobileHomePortrait } from '../components/signal/MobileHome';
@@ -120,6 +121,7 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
   const [activeHash, setActiveHash] = useState(() => window.location.hash);
   const [mobileLibrarySelectedMovieIndex, setMobileLibrarySelectedMovieIndex] = useState(0);
   const [mobileLibraryViewMode, setMobileLibraryViewMode] = useState<MobileLibraryViewMode>('list');
+  const { selectedInstallationIndex, selectInstallation } = useInstallationSelection();
 
   useEffect(() => {
     const updateActiveHash = () => {
@@ -172,10 +174,15 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
   const desktopFallbackPage = (
     <DesktopPageContent renderedHash={activeHash} activeNavId={null} onActiveNavChange={() => undefined} />
   );
+  const mobileInstallationPage = (
+    <InstallationModule installation={installations[selectedInstallationIndex]} onSelect={selectInstallation} mobile />
+  );
   const mobilePortraitPage = activeHash === '' ? (
     <MobileHomePortrait />
   ) : activeHash === '#library' ? (
     mobileLibraryPortraitPage
+  ) : activeHash === '#installations' ? (
+    mobileInstallationPage
   ) : (
     <MobilePageFallback orientation="portrait">{desktopFallbackPage}</MobilePageFallback>
   );
@@ -183,6 +190,8 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
     <MobileHomeLandscape />
   ) : activeHash === '#library' ? (
     mobileLibraryLandscapePage
+  ) : activeHash === '#installations' ? (
+    mobileInstallationPage
   ) : (
     <MobilePageFallback orientation="landscape">{desktopFallbackPage}</MobilePageFallback>
   );
@@ -217,17 +226,13 @@ function DesktopSite({ isAudioEnabled, onAudioToggle }: AudioControls) {
   const [topNavActiveNavId, setTopNavActiveNavId] = useState<string | null>(null);
   const [waveformActiveNavId, setWaveformActiveNavId] = useState<string | null>(null);
   const [pageTransition, setPageTransition] = useState<PageTransitionState | null>(null);
-  const [selectedInstallationIndex, setSelectedInstallationIndex] = useState(0);
+  const { selectedInstallationIndex, selectInstallation } = useInstallationSelection();
   const activeNavId = topNavActiveNavId ?? waveformActiveNavId;
   const activeHashNavId = bottomNavigation.find((item) => item.href === activeHash)?.id ?? null;
   const isSystemActive = activeHash === '#system';
   const isLibraryActive = activeHash === '#library';
   const isLibraryRendered = renderedHash === '#library';
   const isContentPageActive = isSystemActive || isLibraryActive || activeHash === '#installations' || activeHash === '#work';
-
-  const selectInstallation = (direction: -1 | 1) => {
-    setSelectedInstallationIndex((index) => (index + direction + installations.length) % installations.length);
-  };
 
   const isReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
