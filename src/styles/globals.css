@@ -2605,12 +2605,12 @@ a {
 
   .mobile-installations-description,
   .mobile-installations-description .identity-copy {
-    font-size: var(--font-base);
+    font-size: var(--font-sm);
     overflow-wrap: anywhere;
   }
 
   .mobile-installations-description .library-imdb-link {
-    font-size: var(--font-base);
+    font-size: var(--font-sm);
   }
 }
 
