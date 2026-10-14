@@ -124,10 +124,10 @@ function WaveformAnalyzer() {
   );
 }
 
-function IdentityInfoPanel() {
+function IdentityInfoPanel({ mobile }: { mobile: boolean }) {
   return (
-    <section className="identity-info-panel" aria-labelledby="identity-title">
-      <span id="identity-title" className="identity-info-label">
+    <section className="identity-info-panel" aria-labelledby="identity-title" tabIndex={mobile ? 0 : undefined}>
+      <span id="identity-title" className={mobile ? 'sr-only' : 'identity-info-label'}>
         {identityContent.label}
       </span>
       <div className="identity-info-scroll">
@@ -136,7 +136,7 @@ function IdentityInfoPanel() {
             <IdentityStatusColumn items={identityContent.statusLeft} />
             <IdentityStatusColumn items={identityContent.statusRight} />
           </div>
-          <WaveformAnalyzer />
+          {!mobile && <WaveformAnalyzer />}
           <div className="identity-copy">
             {identityContent.paragraphs.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
@@ -148,15 +148,15 @@ function IdentityInfoPanel() {
   );
 }
 
-function IdentityPageContent() {
+function IdentityPageContent({ mobile }: { mobile: boolean }) {
   return (
-    <section className="identity-page-content">
+    <section className={mobile ? 'mobile-identity-page grid min-w-0 gap-[var(--space-4)] font-mono' : 'identity-page-content'}>
       <IdentityAvatarPanel />
-      <IdentityInfoPanel />
+      <IdentityInfoPanel mobile={mobile} />
     </section>
   );
 }
 
-export function IdentityBody() {
-  return <IdentityPageContent />;
+export function IdentityBody({ mobile = false }: { mobile?: boolean }) {
+  return <IdentityPageContent mobile={mobile} />;
 }

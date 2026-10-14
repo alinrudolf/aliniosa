@@ -1327,6 +1327,8 @@ a {
   .mobile-library-page :where(h1, h2, h3, p, a, span, dt, dd, button, li),
   .mobile-installations-page,
   .mobile-installations-page :where(h1, h2, h3, p, a, span, dt, dd, button, li),
+  .mobile-identity-page,
+  .mobile-identity-page :where(h1, h2, h3, p, a, span, dt, dd, button, li),
   .mobile-home,
   .mobile-home :where(h1, h2, h3, p, a, span, dt, dd, button, li) {
     text-shadow: none;
@@ -2612,41 +2614,108 @@ a {
   .mobile-installations-description .library-imdb-link {
     font-size: var(--font-sm);
   }
+
+  .mobile-identity-page {
+    padding: var(--space-6) var(--space-10);
+    font-size: var(--font-sm);
+    line-height: 1.32;
+  }
+
+  .mobile-identity-page .identity-avatar-panel {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: none;
+    padding: 0;
+    container-type: normal;
+  }
+
+  .mobile-identity-page .identity-avatar-frame {
+    width: 100%;
+    height: auto;
+  }
+
+  .mobile-identity-page .identity-avatar-corner {
+    display: none;
+  }
+
+  .mobile-identity-page .identity-info-panel {
+    display: block;
+    height: auto;
+    padding: 0;
+    border: 0;
+  }
+
+  .mobile-identity-page .identity-info-scroll {
+    display: block;
+    overflow: visible;
+  }
+
+  .mobile-identity-page .identity-info-main {
+    gap: var(--space-4);
+  }
+
+  .mobile-identity-page .identity-status-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
+    font-size: var(--font-sm);
+    overflow-wrap: anywhere;
+  }
+
+  .mobile-identity-page .identity-status-column {
+    gap: var(--space-1);
+  }
+
+  .mobile-identity-page .identity-status-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .mobile-identity-page .identity-copy {
+    font-size: var(--font-sm);
+    overflow-wrap: anywhere;
+  }
+
+  .mobile-identity-page .identity-info-panel:focus-visible {
+    outline: 1px solid var(--amber-core);
+    outline-offset: -1px;
+  }
 }
 
 @media (max-width: 768px) and (orientation: portrait) {
-  html:has(.mobile-installations-page),
-  body:has(.mobile-installations-page),
-  #root:has(.mobile-installations-page) {
+  html:has(.mobile-installations-page, .mobile-identity-page),
+  body:has(.mobile-installations-page, .mobile-identity-page),
+  #root:has(.mobile-installations-page, .mobile-identity-page) {
     height: auto;
     min-height: 100%;
     overflow: visible;
   }
 
-  html:has(.mobile-installations-page) {
+  html:has(.mobile-installations-page, .mobile-identity-page) {
     overflow-x: clip;
     overflow-y: auto;
   }
 
-  .mobile-shell:has(.mobile-installations-page) {
+  .mobile-shell:has(.mobile-installations-page, .mobile-identity-page) {
     height: auto;
     min-height: 100dvh;
     grid-template-rows: auto auto;
     overflow: visible;
   }
 
-  .mobile-shell-main:has(.mobile-installations-page) {
+  .mobile-shell-main:has(.mobile-installations-page, .mobile-identity-page) {
     overflow: visible;
   }
 
-  html:has(.mobile-installations-page):has(.mobile-shell-nav-open),
-  body.mobile-nav-scroll-lock:has(.mobile-installations-page) {
+  html:has(.mobile-installations-page, .mobile-identity-page):has(.mobile-shell-nav-open),
+  body.mobile-nav-scroll-lock:has(.mobile-installations-page, .mobile-identity-page) {
     overflow: hidden;
   }
 }
 
 @media (max-width: 768px) and (orientation: landscape), (orientation: landscape) and (max-height: 768px) and (pointer: coarse) {
-  .mobile-shell-main:has(.mobile-installations-page) {
+  .mobile-shell-main:has(.mobile-installations-page, .mobile-identity-page) {
     overflow: hidden;
   }
 
@@ -2683,6 +2752,33 @@ a {
 
   .mobile-installations-description {
     margin-top: var(--space-6);
+  }
+
+  .mobile-identity-page {
+    display: flex;
+    height: 100%;
+    min-height: 0;
+    gap: var(--space-6);
+    padding: var(--space-6);
+    overflow: hidden;
+  }
+
+  .mobile-identity-page .identity-avatar-panel {
+    flex: 0 0 auto;
+    width: auto;
+    height: 100%;
+    /* Leave room for readable metadata on unusually narrow landscapes. */
+    max-width: calc(100% - var(--space-6) - 3 * var(--space-16));
+  }
+
+  .mobile-identity-page .identity-info-panel {
+    flex: 1;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-color: var(--amber-dim) transparent;
+    -webkit-overflow-scrolling: touch;
   }
 }
 

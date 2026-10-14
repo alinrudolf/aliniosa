@@ -18,6 +18,7 @@ import { SystemReadout } from '../components/system/SystemReadout';
 import { WorkPage } from '../components/system/WorkPage';
 import { movies } from '../data/movies';
 import { installations } from '../data/installations';
+import { identityContent } from '../data/identity';
 import { bottomNavigation, navigation, signalMonitorLabel, siteHeader } from '../data/navigation';
 import { HoverTextureExport } from './HoverTextureExport';
 import { TerrainPreviewField } from './TerrainPreviewField';
@@ -112,6 +113,7 @@ function DesktopPageContent({
 }
 
 function getMobilePageTitle(activeHash: string) {
+  if (activeHash === '#system') return identityContent.label.slice(1, -1);
   return navigation.find((item) => item.href === activeHash)?.label.toUpperCase() ?? 'ROOT';
 }
 
@@ -177,12 +179,15 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
   const mobileInstallationPage = (
     <InstallationModule installation={installations[selectedInstallationIndex]} onSelect={selectInstallation} mobile />
   );
+  const mobileIdentityPage = <IdentityBody mobile />;
   const mobilePortraitPage = activeHash === '' ? (
     <MobileHomePortrait />
   ) : activeHash === '#library' ? (
     mobileLibraryPortraitPage
   ) : activeHash === '#installations' ? (
     mobileInstallationPage
+  ) : activeHash === '#system' ? (
+    mobileIdentityPage
   ) : (
     <MobilePageFallback orientation="portrait">{desktopFallbackPage}</MobilePageFallback>
   );
@@ -192,6 +197,8 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
     mobileLibraryLandscapePage
   ) : activeHash === '#installations' ? (
     mobileInstallationPage
+  ) : activeHash === '#system' ? (
+    mobileIdentityPage
   ) : (
     <MobilePageFallback orientation="landscape">{desktopFallbackPage}</MobilePageFallback>
   );
