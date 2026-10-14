@@ -5,6 +5,49 @@ import { SystemModule } from './SystemModule';
 type ChapterId = typeof workChapters[number]['id'];
 const SCROLL_KEYS = new Set(['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' ']);
 
+function WorkIntroduction({ mobile = false }: { mobile?: boolean }) {
+  return (
+    <div className={mobile ? 'mobile-work-introduction relative grid gap-[var(--space-4)] p-[var(--space-4)]' : 'work-introduction relative m-[var(--space-6)] grid shrink-0 gap-[var(--space-4)]'}>
+      {workPage.introduction.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+      <span className="identity-avatar-corner identity-avatar-corner-tl" aria-hidden="true" />
+      <span className="identity-avatar-corner identity-avatar-corner-tr" aria-hidden="true" />
+      <span className="identity-avatar-corner identity-avatar-corner-bl" aria-hidden="true" />
+      <span className="identity-avatar-corner identity-avatar-corner-br" aria-hidden="true" />
+    </div>
+  );
+}
+
+function WorkChapter({ chapter, active = false, mobile = false }: {
+  chapter: typeof workChapters[number];
+  active?: boolean;
+  mobile?: boolean;
+}) {
+  return (
+    <SystemModule
+      id={`work-${chapter.id}`}
+      moduleId={chapter.number}
+      status={workPage.status}
+      title={chapter.title}
+      document={{ active, showCursor: !mobile }}
+      blocks={[
+        { label: workPage.summaryLabel, value: <p className={`${mobile ? 'font-bold' : 'font-semibold'} text-[color:var(--amber-core)]`}>{chapter.introduction}</p> },
+        { label: workPage.bodyLabel, value: <p>{chapter.body}</p> },
+      ]}
+    />
+  );
+}
+
+export function MobileWorkPage() {
+  return (
+    <section className="mobile-work-page grid min-w-0 gap-[calc(var(--space-12)+var(--space-2))] px-[var(--space-10)] pb-[var(--space-16)] pt-[var(--space-6)] font-mono text-[length:var(--font-sm)] leading-[1.32]" aria-label={workPage.label}>
+      <WorkIntroduction mobile />
+      <div>
+        {workChapters.map((chapter) => <WorkChapter key={chapter.id} chapter={chapter} mobile />)}
+      </div>
+    </section>
+  );
+}
+
 export function WorkPage() {
   const [activeId, setActiveId] = useState<ChapterId | null>(null);
   const documentRef = useRef<HTMLDivElement>(null);
@@ -128,13 +171,7 @@ export function WorkPage() {
   return (
     <section className="work-page grid h-full min-h-0 w-full gap-[var(--section-gap)] overflow-hidden border-t border-[color:var(--amber-base)] p-[var(--content-padding)] font-mono text-[length:var(--font-base)] leading-[1.32]" aria-label={workPage.label}>
       <aside className="work-index flex min-h-0 min-w-0 flex-col gap-[var(--space-8)] border border-[color:var(--amber-base)] p-[var(--space-10)]">
-        <div className="work-introduction relative m-[var(--space-6)] grid shrink-0 gap-[var(--space-4)]">
-          {workPage.introduction.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-          <span className="identity-avatar-corner identity-avatar-corner-tl" aria-hidden="true" />
-          <span className="identity-avatar-corner identity-avatar-corner-tr" aria-hidden="true" />
-          <span className="identity-avatar-corner identity-avatar-corner-bl" aria-hidden="true" />
-          <span className="identity-avatar-corner identity-avatar-corner-br" aria-hidden="true" />
-        </div>
+        <WorkIntroduction />
         <nav className="flex min-h-0 flex-1" aria-label={workPage.navigationLabel}>
           <ol ref={navigationRef} className="work-chapter-list min-h-0 w-full overflow-x-hidden overflow-y-auto overscroll-contain">
             {workChapters.map((chapter) => (
@@ -159,17 +196,10 @@ export function WorkPage() {
       <div className="min-h-0 min-w-0 overflow-hidden border border-[color:var(--amber-base)]">
         <div ref={documentRef} className="work-document-scroll h-full min-h-0 overflow-x-hidden overflow-y-auto overscroll-contain p-[var(--space-10)]" role="region" aria-label={workPage.documentLabel} tabIndex={0}>
           {workChapters.map((chapter) => (
-            <SystemModule
+            <WorkChapter
               key={chapter.id}
-              id={`work-${chapter.id}`}
-              moduleId={chapter.number}
-              status={workPage.status}
-              title={chapter.title}
-              document={{ active: activeId === chapter.id }}
-              blocks={[
-                { label: workPage.summaryLabel, value: <p className="font-semibold text-[color:var(--amber-core)]">{chapter.introduction}</p> },
-                { label: workPage.bodyLabel, value: <p>{chapter.body}</p> },
-              ]}
+              chapter={chapter}
+              active={activeId === chapter.id}
             />
           ))}
         </div>

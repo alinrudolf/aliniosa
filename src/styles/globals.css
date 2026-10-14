@@ -1329,6 +1329,8 @@ a {
   .mobile-installations-page :where(h1, h2, h3, p, a, span, dt, dd, button, li),
   .mobile-identity-page,
   .mobile-identity-page :where(h1, h2, h3, p, a, span, dt, dd, button, li),
+  .mobile-work-page,
+  .mobile-work-page :where(h1, h2, h3, p, a, span, dt, dd, button, li),
   .mobile-home,
   .mobile-home :where(h1, h2, h3, p, a, span, dt, dd, button, li) {
     text-shadow: none;
@@ -2680,6 +2682,65 @@ a {
   .mobile-identity-page .identity-info-panel:focus-visible {
     outline: 1px solid var(--amber-core);
     outline-offset: -1px;
+  }
+
+  .mobile-work-page {
+    overflow-wrap: anywhere;
+  }
+
+  .mobile-work-introduction .identity-avatar-corner-tl,
+  .mobile-work-introduction .identity-avatar-corner-tr {
+    top: 0;
+  }
+
+  .mobile-work-introduction .identity-avatar-corner-bl,
+  .mobile-work-introduction .identity-avatar-corner-br {
+    bottom: 0;
+  }
+
+  .mobile-work-introduction .identity-avatar-corner-tl,
+  .mobile-work-introduction .identity-avatar-corner-bl {
+    left: 0;
+  }
+
+  .mobile-work-introduction .identity-avatar-corner-tr,
+  .mobile-work-introduction .identity-avatar-corner-br {
+    right: 0;
+  }
+
+  .mobile-work-page .work-chapter-heading {
+    padding-inline: 0;
+    border-color: var(--amber-base);
+    font-size: var(--font-lg);
+  }
+
+  html:has(.mobile-work-page),
+  body:has(.mobile-work-page),
+  #root:has(.mobile-work-page) {
+    height: auto;
+    min-height: 100%;
+    overflow: visible;
+  }
+
+  html:has(.mobile-work-page) {
+    overflow-x: clip;
+    overflow-y: auto;
+  }
+
+  .mobile-shell:has(.mobile-work-page) {
+    height: auto;
+    min-height: 100dvh;
+    grid-template-rows: auto auto;
+    overflow: visible;
+  }
+
+  .mobile-shell-main:has(.mobile-work-page) {
+    overflow: visible;
+  }
+
+  html:has(.mobile-work-page):has(.mobile-shell-nav-open),
+  body.mobile-nav-scroll-lock:has(.mobile-work-page) {
+    overflow: hidden;
   }
 }
 

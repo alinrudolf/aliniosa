@@ -15,7 +15,7 @@ import { MobileHomeLandscape, MobileHomePortrait } from '../components/signal/Mo
 import { SignalMonitorNav } from '../components/signal/SignalMonitorNav';
 import { IdentityBody } from '../components/system/IdentityBody';
 import { SystemReadout } from '../components/system/SystemReadout';
-import { WorkPage } from '../components/system/WorkPage';
+import { MobileWorkPage, WorkPage } from '../components/system/WorkPage';
 import { movies } from '../data/movies';
 import { installations } from '../data/installations';
 import { identityContent } from '../data/identity';
@@ -180,6 +180,7 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
     <InstallationModule installation={installations[selectedInstallationIndex]} onSelect={selectInstallation} mobile />
   );
   const mobileIdentityPage = <IdentityBody mobile />;
+  const mobileWorkPage = <MobileWorkPage />;
   const mobilePortraitPage = activeHash === '' ? (
     <MobileHomePortrait />
   ) : activeHash === '#library' ? (
@@ -188,6 +189,8 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
     mobileInstallationPage
   ) : activeHash === '#system' ? (
     mobileIdentityPage
+  ) : activeHash === '#work' ? (
+    mobileWorkPage
   ) : (
     <MobilePageFallback orientation="portrait">{desktopFallbackPage}</MobilePageFallback>
   );
@@ -199,6 +202,8 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
     mobileInstallationPage
   ) : activeHash === '#system' ? (
     mobileIdentityPage
+  ) : activeHash === '#work' ? (
+    mobileWorkPage
   ) : (
     <MobilePageFallback orientation="landscape">{desktopFallbackPage}</MobilePageFallback>
   );

@@ -15,7 +15,7 @@ type SystemModuleProps = {
   title: ReactNode;
   blocks: SystemModuleBlock[];
   command?: string;
-  document?: { active: boolean };
+  document?: { active: boolean; showCursor?: boolean };
   panel?: {
     mobile?: boolean;
     contentRef?: Ref<HTMLElement>;
@@ -30,7 +30,7 @@ export function SystemModule({ id, moduleId, status, title, blocks, command, pan
       <section id={id} className="work-chapter" aria-labelledby={`${id}-title`}>
         <div className="sr-only">{moduleId} <StatusBadge status={status} /></div>
         <h2 id={`${id}-title`} className="work-chapter-heading border-y border-dashed border-[color:var(--amber-dim)] p-[var(--space-4)] text-[length:var(--font-xl)] font-normal leading-tight">
-          {title}<span className={`work-heading-cursor ${document.active ? 'work-heading-cursor-active' : ''}`} aria-hidden="true">_</span>
+          {title}{document.showCursor !== false && <span className={`work-heading-cursor ${document.active ? 'work-heading-cursor-active' : ''}`} aria-hidden="true">_</span>}
         </h2>
         <dl className="work-chapter-copy grid gap-[var(--space-4)] pt-[var(--space-6)]">
           {blocks.map((block) => (
