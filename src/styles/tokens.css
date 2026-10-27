@@ -85,4 +85,17 @@
   --library-details-height-compact: calc(9rem * var(--ui-scale));
   --library-details-primary-min: calc(16rem * var(--ui-scale));
   --library-details-primary-max: calc(30rem * var(--ui-scale));
+
+  --contact-panel-width: calc(60rem * var(--ui-scale));
+  --contact-panel-height: calc(39.75rem * var(--ui-scale));
+  --contact-signal-width: calc(22.5rem * var(--ui-scale));
+  --contact-signal-image-size: calc(5rem * var(--ui-scale));
+  --contact-signal-dots-width: calc(7.5rem * var(--ui-scale));
+  --contact-signal-dot-size: var(--space-3);
+  --contact-mobile-signal-width: 15.5rem;
+  --contact-mobile-signal-image-size: 3rem;
+  --contact-mobile-signal-dots-width: 6.5rem;
+  --contact-mobile-portrait-signal-offset: 2.375rem;
+  --contact-mobile-landscape-signal-offset: 1.375rem;
+  --contact-row-number-width: calc(1.875rem * var(--ui-scale));
 }

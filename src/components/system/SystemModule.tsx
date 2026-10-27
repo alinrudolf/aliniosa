@@ -16,6 +16,7 @@ type SystemModuleProps = {
   blocks: SystemModuleBlock[];
   command?: string;
   document?: { active: boolean; showCursor?: boolean };
+  contact?: { mobile: boolean; signal: ReactNode };
   panel?: {
     mobile?: boolean;
     contentRef?: Ref<HTMLElement>;
@@ -24,7 +25,26 @@ type SystemModuleProps = {
   };
 };
 
-export function SystemModule({ id, moduleId, status, title, blocks, command, panel, document }: SystemModuleProps) {
+export function SystemModule({ id, moduleId, status, title, blocks, command, panel, document, contact }: SystemModuleProps) {
+  if (contact) {
+    return (
+      <section id={id} className="contact-panel relative min-w-0" aria-labelledby={`${id}-title`}>
+        <span className={contact.mobile ? 'sr-only' : 'identity-info-label contact-panel-label'}>{moduleId}</span>
+        <span className="sr-only"><StatusBadge status={status} /></span>
+        <h2 id={`${id}-title`} className="sr-only">{title}</h2>
+        {contact.signal}
+        <dl className="contact-links">
+          {blocks.map((block) => (
+            <div key={block.label} className="contact-link-block">
+              <dt className="sr-only">{block.label}</dt>
+              <dd className="m-0">{block.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    );
+  }
+
   if (document) {
     return (
       <section id={id} className="work-chapter" aria-labelledby={`${id}-title`}>

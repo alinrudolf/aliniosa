@@ -341,6 +341,84 @@ a {
   animation: identityPortraitScanline 6.8s linear infinite;
 }
 
+.contact-page {
+  display: grid;
+  min-height: 100%;
+  grid-template-columns: minmax(0, var(--contact-panel-width));
+  place-content: center;
+  padding: var(--space-10);
+}
+
+.contact-panel {
+  min-height: min(var(--contact-panel-height), calc(100dvh - 2 * var(--shell-margin-y) - var(--header-height) - 9.625rem * var(--ui-scale) - 2 * var(--space-10) - 2px));
+  padding: var(--space-10);
+  border: 1px solid var(--amber-base);
+  background: var(--bg-crt);
+}
+
+.contact-panel-label {
+  right: var(--space-8);
+}
+
+.contact-signal {
+  width: min(100%, var(--contact-signal-width));
+  grid-template-columns: minmax(0, var(--contact-signal-image-size)) minmax(0, var(--contact-signal-dots-width)) minmax(0, var(--contact-signal-image-size));
+  justify-content: space-between;
+  column-gap: var(--space-4);
+}
+
+.contact-signal-image {
+  image-rendering: pixelated;
+}
+
+.contact-signal-dot {
+  width: var(--contact-signal-dot-size);
+}
+
+.contact-links {
+  margin-top: var(--space-10);
+}
+
+.contact-link-block + .contact-link-block {
+  border-top: 1px solid var(--amber-base);
+}
+
+.contact-link {
+  grid-template-columns: var(--contact-row-number-width) minmax(0, 1fr) var(--space-4);
+  column-gap: var(--space-4);
+  padding: var(--space-4);
+  font-size: var(--font-lg);
+  line-height: 1.3;
+}
+
+.contact-link-subtitle {
+  margin-top: var(--space-4);
+  font-size: var(--font-base);
+}
+
+.contact-link:hover,
+.contact-link:focus-visible {
+  color: var(--amber-core);
+}
+
+.contact-panel :where(h2, p, a, span, dt, dd) {
+  text-shadow: none;
+}
+
+@media (max-height: 900px) {
+  .contact-page {
+    padding-block: var(--space-6);
+  }
+
+  .contact-page .contact-panel {
+    padding: var(--space-8);
+  }
+
+  .contact-page .contact-links {
+    margin-top: var(--space-8);
+  }
+}
+
 .work-page {
   grid-template-columns: minmax(0, 0.3866fr) minmax(0, 0.6134fr);
 }
@@ -1281,6 +1359,72 @@ a {
 }
 
 @media (max-width: 768px), (orientation: landscape) and (max-height: 768px) and (pointer: coarse) {
+  .mobile-contact-page {
+    padding: var(--contact-mobile-portrait-signal-offset) var(--space-10) var(--space-8);
+  }
+
+  .mobile-contact-page .contact-panel {
+    min-height: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .mobile-contact-page .contact-signal {
+    width: min(100%, var(--contact-mobile-signal-width));
+    grid-template-columns: minmax(0, var(--contact-mobile-signal-image-size)) minmax(0, var(--contact-mobile-signal-dots-width)) minmax(0, var(--contact-mobile-signal-image-size));
+  }
+
+  .mobile-contact-page .contact-signal-dot {
+    width: var(--space-2);
+  }
+
+  .mobile-contact-page .contact-links {
+    margin-top: var(--space-6);
+  }
+
+  .mobile-contact-page .contact-link {
+    padding-block: var(--space-6);
+  }
+
+  .mobile-contact-page .contact-link-block:first-child .contact-link {
+    padding-top: var(--space-4);
+  }
+
+  .mobile-contact-page .contact-link-subtitle {
+    margin-top: var(--space-2);
+    font-size: var(--font-sm);
+  }
+
+  html:has(.mobile-contact-page),
+  body:has(.mobile-contact-page),
+  #root:has(.mobile-contact-page) {
+    height: auto;
+    min-height: 100%;
+    overflow: visible;
+  }
+
+  html:has(.mobile-contact-page) {
+    overflow-x: clip;
+    overflow-y: auto;
+  }
+
+  .mobile-shell:has(.mobile-contact-page) {
+    height: auto;
+    min-height: 100dvh;
+    grid-template-rows: auto auto;
+    align-content: start;
+    overflow: visible;
+  }
+
+  .mobile-shell-main:has(.mobile-contact-page) {
+    overflow: visible;
+  }
+
+  html:has(.mobile-contact-page):has(.mobile-shell-nav-open),
+  body.mobile-nav-scroll-lock:has(.mobile-contact-page) {
+    overflow: hidden;
+  }
+
   body.mobile-nav-scroll-lock {
     overflow: hidden;
   }
@@ -2306,6 +2450,10 @@ a {
 }
 
 @media (max-width: 768px) and (orientation: landscape), (orientation: landscape) and (max-height: 768px) and (pointer: coarse) {
+  .mobile-contact-page {
+    padding-top: var(--contact-mobile-landscape-signal-offset);
+  }
+
   .mobile-shell[data-orientation='landscape'] {
     --mobile-header-height: 3.125rem;
     --mobile-logo-size: 2.375rem;

@@ -14,6 +14,7 @@ import { MovieLibrary } from '../components/library/MovieLibrary';
 import { MobileHomeLandscape, MobileHomePortrait } from '../components/signal/MobileHome';
 import { SignalMonitorNav } from '../components/signal/SignalMonitorNav';
 import { IdentityBody } from '../components/system/IdentityBody';
+import { ContactPage } from '../components/system/ContactPage';
 import { SystemReadout } from '../components/system/SystemReadout';
 import { MobileWorkPage, WorkPage } from '../components/system/WorkPage';
 import { movies } from '../data/movies';
@@ -98,6 +99,10 @@ function DesktopPageContent({
 
   if (renderedHash === '#work' && isDesktop) {
     return <WorkPage />;
+  }
+
+  if (renderedHash === '#contact') {
+    return <ContactPage />;
   }
 
   // Only DesktopSite supplies selection; mobile retains its existing fallback.
@@ -191,6 +196,8 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
     mobileIdentityPage
   ) : activeHash === '#work' ? (
     mobileWorkPage
+  ) : activeHash === '#contact' ? (
+    <ContactPage mobile />
   ) : (
     <MobilePageFallback orientation="portrait">{desktopFallbackPage}</MobilePageFallback>
   );
@@ -204,6 +211,8 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
     mobileIdentityPage
   ) : activeHash === '#work' ? (
     mobileWorkPage
+  ) : activeHash === '#contact' ? (
+    <ContactPage mobile />
   ) : (
     <MobilePageFallback orientation="landscape">{desktopFallbackPage}</MobilePageFallback>
   );
@@ -244,7 +253,7 @@ function DesktopSite({ isAudioEnabled, onAudioToggle }: AudioControls) {
   const isSystemActive = activeHash === '#system';
   const isLibraryActive = activeHash === '#library';
   const isLibraryRendered = renderedHash === '#library';
-  const isContentPageActive = isSystemActive || isLibraryActive || activeHash === '#installations' || activeHash === '#work';
+  const isContentPageActive = isSystemActive || isLibraryActive || activeHash === '#installations' || activeHash === '#work' || activeHash === '#contact';
 
   const isReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
