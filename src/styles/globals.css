@@ -371,6 +371,60 @@ a {
   image-rendering: pixelated;
 }
 
+.contact-signal-globe {
+  background-image: var(--contact-globe-sprite);
+  background-size: 800% 100%;
+  background-position: 0% 0%;
+  background-repeat: no-repeat;
+  animation: contactGlobeFrames 1s steps(1, end) infinite;
+}
+
+.contact-signal-globe-fallback {
+  visibility: hidden;
+}
+
+.contact-signal-dots {
+  /* Clip only between squares; hidden dots retain their original layout space. */
+  clip-path: inset(0 0 0 100%);
+  animation: contactConnectionDots 1.4s steps(1, end) infinite;
+}
+
+@keyframes contactGlobeFrames {
+  0% { background-position: 0% 0%; }
+  12.5% { background-position: 100% 0%; }
+  25% { background-position: 85.714286% 0%; }
+  37.5% { background-position: 71.428571% 0%; }
+  50% { background-position: 57.142857% 0%; }
+  62.5% { background-position: 42.857143% 0%; }
+  75% { background-position: 28.571429% 0%; }
+  87.5%, 100% { background-position: 14.285714% 0%; }
+}
+
+@keyframes contactConnectionDots {
+  0% { clip-path: inset(0 0 0 100%); }
+  14.285714% { clip-path: inset(0 0 0 75%); }
+  28.571429% { clip-path: inset(0 0 0 50%); }
+  42.857143% { clip-path: inset(0 0 0 25%); }
+  57.142857% { clip-path: inset(0 0 0 0%); }
+  85.714286%, 100% { clip-path: inset(0 0 0 100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-signal-globe {
+    animation: none;
+    background-image: none;
+  }
+
+  .contact-signal-globe-fallback {
+    visibility: visible;
+  }
+
+  .contact-signal-dots {
+    animation: none;
+    clip-path: none;
+  }
+}
+
 .contact-signal-dot {
   width: var(--contact-signal-dot-size);
 }
