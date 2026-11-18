@@ -1,10 +1,8 @@
 import { useSyncExternalStore } from 'react';
 import {
   getViewportLayoutFromMatches,
-  LANDSCAPE_QUERY,
   MOBILE_LANDSCAPE_QUERY,
   MOBILE_LAYOUT_QUERY,
-  MOBILE_PORTRAIT_QUERY,
   type ViewportLayoutMode,
 } from './viewportLayout';
 
@@ -19,16 +17,14 @@ function getViewportLayoutSnapshot(): ViewportLayoutMode {
 
   return getViewportLayoutFromMatches(
     getMediaQueryList(MOBILE_LAYOUT_QUERY).matches,
-    getMediaQueryList(LANDSCAPE_QUERY).matches,
+    getMediaQueryList(MOBILE_LANDSCAPE_QUERY).matches,
   );
 }
 
 function subscribeToViewportLayout(onStoreChange: () => void) {
   const mediaQueryLists = [
     getMediaQueryList(MOBILE_LAYOUT_QUERY),
-    getMediaQueryList(MOBILE_PORTRAIT_QUERY),
     getMediaQueryList(MOBILE_LANDSCAPE_QUERY),
-    getMediaQueryList(LANDSCAPE_QUERY),
   ];
 
   mediaQueryLists.forEach((mediaQueryList) => {

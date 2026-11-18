@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef } from 'react';
+import { MOBILE_PORTRAIT_QUERY } from '../../app/viewportLayout';
 import { installationLabels, type Installation } from '../../data/installations';
 import { useTerminalTextSwap } from '../layout/TerminalTextSwap';
 import { SystemModule } from '../system/SystemModule';
@@ -24,7 +25,7 @@ export function InstallationModule({ installation, onSelect, mobile = false }: I
   useLayoutEffect(() => {
     if (!mobile) return;
 
-    if (window.matchMedia('(orientation: portrait)').matches) {
+    if (window.matchMedia(MOBILE_PORTRAIT_QUERY).matches) {
       window.scrollTo({ top: 0, behavior: 'instant' });
     } else if (contentRef.current) {
       contentRef.current.scrollTop = 0;
