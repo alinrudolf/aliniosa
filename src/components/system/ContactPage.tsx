@@ -20,14 +20,13 @@ export function ContactPage({ mobile = false }: { mobile?: boolean }) {
               rel={link.external ? 'noopener noreferrer' : undefined}
               download={link.external ? undefined : 'Curriculum Vitae.pdf'}
               aria-label={link.accessibleName}
-              className="contact-link grid min-w-0 items-start font-mono focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-[-1px] focus-visible:outline-[color:var(--amber-core)]"
+              className="contact-link"
             >
-              <span className="contact-link-number font-bold text-[color:var(--amber-core)]" aria-hidden="true">{link.number}</span>
-              <span className="contact-link-copy min-w-0">
-                <span className="contact-link-title block font-normal">{link.title}</span>
-                <span className="contact-link-subtitle block font-bold">{link.subtitle}</span>
-              </span>
-              <span className="contact-link-arrow self-center font-normal" aria-hidden="true">{link.arrow}</span>
+              <span className="bottom-nav-state-layer bottom-nav-active-layer" aria-hidden="true" />
+              <span className="contact-link-number" aria-hidden="true">{link.number}</span>
+              <span className="contact-link-title">{link.title}</span>
+              <span className="contact-link-subtitle">{link.subtitle}</span>
+              <span className="contact-link-arrow" aria-hidden="true">{link.arrow}</span>
             </a>
           ),
         }))}

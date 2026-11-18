@@ -51,7 +51,7 @@ export function InstallationModule({ installation, onSelect, mobile = false }: I
   return (
     <section className={mobile ? 'mobile-installations-page grid min-w-0 gap-[var(--space-4)] font-mono' : 'identity-page-content'} aria-label={installation.title}>
       <div className={mobile ? 'mobile-installations-image-panel min-h-0 min-w-0' : 'identity-avatar-panel'}>
-        <div className={`${mobile ? 'mobile-installations-image-frame' : 'identity-avatar-frame'} installation-illustration-viewport`}>
+        <div className={`${mobile ? 'mobile-installations-image-frame' : 'identity-avatar-frame'} technical-illustration-viewport`}>
           <img key={installation.id} src={installation.image} alt={installation.imageAlt} className="identity-avatar-image" />
           <span className="identity-avatar-corner identity-avatar-corner-tl" aria-hidden="true" />
           <span className="identity-avatar-corner identity-avatar-corner-tr" aria-hidden="true" />
