@@ -1,10 +1,17 @@
+import { lazy, Suspense } from 'react';
 import { contactLinks, contactPage } from '../../data/contact';
 import { ContactSignal } from '../signal/ContactSignal';
 import { SystemModule } from './SystemModule';
+import './ContactMapBackground.css';
+
+const ContactMapBackground = lazy(() => import('./ContactMapBackground'));
 
 export function ContactPage({ mobile = false }: { mobile?: boolean }) {
   return (
     <div className={`${mobile ? 'mobile-contact-page' : 'contact-page'} min-w-0 font-mono text-[color:var(--amber-base)]`}>
+      <Suspense fallback={null}>
+        <ContactMapBackground />
+      </Suspense>
       <SystemModule
         id="contact"
         moduleId={contactPage.label}

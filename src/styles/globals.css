@@ -356,6 +356,7 @@ a {
   grid-template-columns: minmax(0, var(--contact-panel-width));
   place-content: center;
   padding: var(--space-10);
+  border-top: 1px solid var(--amber-dim);
 }
 
 .contact-panel {
@@ -449,7 +450,7 @@ a {
 
 @media (max-height: 900px) {
   .contact-page {
-    padding-block: var(--space-6);
+    padding-block: var(--space-4);
   }
 
   .contact-page .contact-panel {
@@ -2237,7 +2238,7 @@ a {
   }
 }
 
-@media (max-width: 768px) and (orientation: portrait), (768px < width <= 1300px) and (aspect-ratio < 5/4) {
+@media (max-width: 768px) and (orientation: portrait), (768px < width < 1000px) and (aspect-ratio < 5/4) {
   .mobile-shell[data-orientation='portrait'] {
     --mobile-shell-padding-x: 1rem;
     --mobile-nav-margin-x: clamp(1.5rem, 6.667vw, 2rem);
@@ -2510,7 +2511,7 @@ a {
   }
 }
 
-@media (max-width: 768px) and (orientation: landscape), (768px < width <= 1300px) and (aspect-ratio >= 5/4), (width > 1300px) and (orientation: landscape) and (max-height: 768px) and (pointer: coarse) {
+@media (max-width: 768px) and (orientation: landscape), (768px < width < 1000px) and (aspect-ratio >= 5/4), (1000px <= width <= 1300px), (width > 1300px) and (orientation: landscape) and (max-height: 768px) and (pointer: coarse) {
   .mobile-contact-page {
     padding-top: var(--contact-mobile-landscape-signal-offset);
   }
@@ -2959,7 +2960,7 @@ a {
   }
 }
 
-@media (max-width: 768px) and (orientation: portrait), (768px < width <= 1300px) and (aspect-ratio < 5/4) {
+@media (max-width: 768px) and (orientation: portrait), (768px < width < 1000px) and (aspect-ratio < 5/4) {
   html:has(.mobile-installations-page, .mobile-identity-page),
   body:has(.mobile-installations-page, .mobile-identity-page),
   #root:has(.mobile-installations-page, .mobile-identity-page) {
@@ -2985,13 +2986,25 @@ a {
     overflow: visible;
   }
 
+  .mobile-identity-page .identity-avatar-panel {
+    aspect-ratio: auto;
+  }
+
   html:has(.mobile-installations-page, .mobile-identity-page):has(.mobile-shell-nav-open),
   body.mobile-nav-scroll-lock:has(.mobile-installations-page, .mobile-identity-page) {
     overflow: hidden;
   }
 }
 
-@media (max-width: 768px) and (orientation: landscape), (768px < width <= 1300px) and (aspect-ratio >= 5/4), (width > 1300px) and (orientation: landscape) and (max-height: 768px) and (pointer: coarse) {
+@media (768px < width < 1000px) and (aspect-ratio < 5/4) {
+  .mobile-identity-page .identity-avatar-frame,
+  .mobile-installations-image-frame {
+    width: min(100%, 480px, 50dvh);
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape), (768px < width < 1000px) and (aspect-ratio >= 5/4), (1000px <= width <= 1300px), (width > 1300px) and (orientation: landscape) and (max-height: 768px) and (pointer: coarse) {
   .mobile-shell-main:has(.mobile-installations-page, .mobile-identity-page) {
     overflow: hidden;
   }
@@ -3056,6 +3069,24 @@ a {
     overscroll-behavior: contain;
     scrollbar-color: var(--amber-dim) transparent;
     -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (1000px <= width <= 1300px) {
+  .mobile-installations-image-panel {
+    max-width: 45%;
+  }
+
+  .mobile-installations-image-frame {
+    height: auto;
+  }
+
+  .mobile-library-preview-landscape {
+    container-type: inline-size;
+  }
+
+  .mobile-library-preview-landscape .mobile-library-preview-poster-frame {
+    height: min(100%, 67.5cqw);
   }
 }
 

@@ -1,0 +1,75 @@
+.contact-page,
+.mobile-contact-page {
+  position: relative;
+  isolation: isolate;
+}
+
+.contact-map-background {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--bg-crt);
+}
+
+.contact-map-background svg {
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.contact-map-grid {
+  stroke: var(--amber-dim);
+  stroke-dasharray: 2 6;
+  opacity: 0.26;
+}
+
+.contact-map-dots {
+  stroke: var(--amber-dim);
+  opacity: 0.58;
+}
+
+.contact-map-hotspots {
+  stroke: var(--amber-base);
+  opacity: 0.94;
+}
+
+.contact-map-hotspots path {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .contact-map-hotspots path {
+    animation: contactMapActivation 24s ease-in-out var(--contact-map-delay) infinite;
+  }
+}
+
+@keyframes contactMapActivation {
+  0%, 19%, 100% { opacity: 0; }
+  7%, 11% { opacity: 1; }
+}
+
+.mobile-contact-page {
+  min-height: calc(100dvh - var(--mobile-header-height) - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 2px);
+}
+
+.mobile-contact-page .contact-map-background svg {
+  width: auto;
+  min-width: 100%;
+  min-height: 25rem;
+  aspect-ratio: 1760 / 716;
+  opacity: 0.65;
+}
+
+.mobile-shell[data-orientation='portrait'] .contact-map-background svg {
+  right: 0;
+  transform: translateX(8%);
+}
+
+.mobile-shell[data-orientation='landscape'] .contact-map-background svg {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
