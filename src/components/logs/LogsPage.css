@@ -1,0 +1,116 @@
+.logs-page {
+  display: grid;
+  min-height: 100%;
+  grid-template-columns: minmax(0, calc(60rem * var(--ui-scale)));
+  place-content: center;
+  padding: var(--content-padding);
+  border-top: 1px solid var(--amber-base);
+}
+
+.logs-panel {
+  position: relative;
+  min-width: 0;
+  font-size: var(--font-base);
+  line-height: 1.32;
+}
+
+.logs-panel :where(h2, p, span) {
+  text-shadow: none;
+}
+
+.logs-page .logs-panel {
+  padding: calc(var(--space-16) + var(--space-4) - 1px);
+  border: 1px solid var(--amber-base);
+}
+
+.logs-panel .logs-panel-label {
+  right: calc(var(--space-12) + var(--space-2));
+  font-family: var(--font-family-vga);
+  font-size: var(--font-base);
+  letter-spacing: normal;
+  color: var(--amber-base);
+}
+
+.logs-heading {
+  display: grid;
+  grid-template-areas: 'artwork' 'top' 'title' 'bottom';
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+
+.logs-artwork {
+  display: block;
+  width: calc(6.5rem * var(--ui-scale));
+  height: auto;
+  grid-area: artwork;
+  justify-self: center;
+  margin-block-end: var(--space-10);
+}
+
+.logs-heading-rule {
+  display: block;
+  width: 100%;
+  height: 1px;
+  grid-area: bottom;
+}
+
+.logs-heading-rule-top {
+  grid-area: top;
+}
+
+.logs-title {
+  min-width: 0;
+  grid-area: title;
+  padding: var(--space-4);
+  overflow-wrap: anywhere;
+  font-size: clamp(var(--font-lg), 9vw, calc(2rem * var(--ui-scale)));
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.logs-copy {
+  display: grid;
+  gap: var(--space-4);
+  margin-block-start: var(--space-6);
+}
+
+.mobile-logs-page {
+  padding: var(--space-10) calc(var(--space-10) - 1px) var(--space-16);
+}
+
+.mobile-logs-page .logs-artwork {
+  margin-block-end: calc(var(--space-6) + var(--space-1));
+}
+
+.mobile-shell[data-orientation='landscape'] .mobile-logs-page {
+  padding-block-start: calc(var(--space-16) - var(--space-1));
+}
+
+.mobile-shell[data-orientation='landscape'] .logs-panel {
+  max-width: calc(30rem * var(--ui-scale));
+  margin-inline: auto;
+}
+
+.mobile-shell[data-orientation='landscape'] .logs-heading {
+  grid-template-areas: 'top top' 'artwork title' 'bottom bottom';
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--space-8);
+}
+
+.mobile-shell[data-orientation='landscape'] .logs-artwork {
+  margin: var(--space-4) 0 var(--space-4) var(--space-4);
+}
+
+.mobile-shell[data-orientation='landscape'] .logs-title {
+  padding-inline-start: 0;
+}
+
+@media (max-height: 875px) {
+  .logs-page {
+    padding-block: var(--space-4);
+  }
+
+  .logs-page .logs-panel {
+    padding-block: var(--space-8);
+  }
+}

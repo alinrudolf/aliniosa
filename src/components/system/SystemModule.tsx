@@ -17,6 +17,7 @@ type SystemModuleProps = {
   command?: string;
   document?: { active: boolean; showCursor?: boolean };
   contact?: { mobile: boolean; signal: ReactNode };
+  emptyState?: { mobile: boolean; artwork: ReactNode };
   panel?: {
     mobile?: boolean;
     contentRef?: Ref<HTMLElement>;
@@ -25,7 +26,7 @@ type SystemModuleProps = {
   };
 };
 
-export function SystemModule({ id, moduleId, status, title, blocks, command, panel, document, contact }: SystemModuleProps) {
+export function SystemModule({ id, moduleId, status, title, blocks, command, panel, document, contact, emptyState }: SystemModuleProps) {
   if (contact) {
     return (
       <section id={id} className="contact-panel relative min-w-0" aria-labelledby={`${id}-title`}>
@@ -36,6 +37,33 @@ export function SystemModule({ id, moduleId, status, title, blocks, command, pan
         <dl className="contact-links">
           {blocks.map((block) => (
             <div key={block.label} className="contact-link-block">
+              <dt className="sr-only">{block.label}</dt>
+              <dd className="m-0">{block.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    );
+  }
+
+  if (emptyState) {
+    return (
+      <section id={id} className="logs-panel" aria-labelledby={`${id}-title`}>
+        <span className={emptyState.mobile ? 'sr-only' : 'identity-info-label logs-panel-label'}>{moduleId}</span>
+        <span className="sr-only"><StatusBadge status={status} /></span>
+        <div className="logs-heading">
+          {emptyState.artwork}
+          <svg className="logs-heading-rule logs-heading-rule-top" aria-hidden="true">
+            <line x2="100%" y1="0.5" y2="0.5" stroke="currentColor" strokeDasharray="8 4" />
+          </svg>
+          <h2 id={`${id}-title`} className="logs-title">{title}</h2>
+          <svg className="logs-heading-rule" aria-hidden="true">
+            <line x2="100%" y1="0.5" y2="0.5" stroke="currentColor" strokeDasharray="8 4" />
+          </svg>
+        </div>
+        <dl className="logs-copy">
+          {blocks.map((block) => (
+            <div key={block.label}>
               <dt className="sr-only">{block.label}</dt>
               <dd className="m-0">{block.value}</dd>
             </div>

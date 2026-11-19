@@ -11,6 +11,7 @@ import { InstallationModule } from '../components/installations/InstallationModu
 import { useInstallationSelection } from '../components/installations/useInstallationSelection';
 import { MobileLibrary, type MobileLibraryViewMode } from '../components/library/MobileLibrary';
 import { MovieLibrary } from '../components/library/MovieLibrary';
+import { LogsPage } from '../components/logs/LogsPage';
 import { MobileHomeLandscape, MobileHomePortrait } from '../components/signal/MobileHome';
 import { SignalMonitorNav } from '../components/signal/SignalMonitorNav';
 import { IdentityBody } from '../components/system/IdentityBody';
@@ -101,6 +102,10 @@ function DesktopPageContent({
     return <WorkPage />;
   }
 
+  if (renderedHash === '#logs') {
+    return <LogsPage />;
+  }
+
   if (renderedHash === '#contact') {
     return <ContactPage />;
   }
@@ -186,6 +191,7 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
   );
   const mobileIdentityPage = <IdentityBody mobile />;
   const mobileWorkPage = <MobileWorkPage />;
+  const mobileLogsPage = <LogsPage mobile />;
   const mobilePortraitPage = activeHash === '' ? (
     <MobileHomePortrait />
   ) : activeHash === '#library' ? (
@@ -198,6 +204,8 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
     mobileWorkPage
   ) : activeHash === '#contact' ? (
     <ContactPage mobile />
+  ) : activeHash === '#logs' ? (
+    mobileLogsPage
   ) : (
     <MobilePageFallback orientation="portrait">{desktopFallbackPage}</MobilePageFallback>
   );
@@ -213,6 +221,8 @@ function MobileSite({ layoutMode, isAudioEnabled, onAudioToggle }: AudioControls
     mobileWorkPage
   ) : activeHash === '#contact' ? (
     <ContactPage mobile />
+  ) : activeHash === '#logs' ? (
+    mobileLogsPage
   ) : (
     <MobilePageFallback orientation="landscape">{desktopFallbackPage}</MobilePageFallback>
   );
@@ -253,7 +263,7 @@ function DesktopSite({ isAudioEnabled, onAudioToggle }: AudioControls) {
   const isSystemActive = activeHash === '#system';
   const isLibraryActive = activeHash === '#library';
   const isLibraryRendered = renderedHash === '#library';
-  const isContentPageActive = isSystemActive || isLibraryActive || activeHash === '#installations' || activeHash === '#work' || activeHash === '#contact';
+  const isContentPageActive = isSystemActive || isLibraryActive || activeHash === '#installations' || activeHash === '#work' || activeHash === '#logs' || activeHash === '#contact';
 
   const isReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

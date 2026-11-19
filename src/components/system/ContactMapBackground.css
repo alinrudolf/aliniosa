@@ -1,5 +1,4 @@
-.contact-page,
-.mobile-contact-page {
+.contact-page {
   position: relative;
   isolation: isolate;
 }
@@ -49,27 +48,4 @@
 @keyframes contactMapActivation {
   0%, 19%, 100% { opacity: 0; }
   7%, 11% { opacity: 1; }
-}
-
-.mobile-contact-page {
-  min-height: calc(100dvh - var(--mobile-header-height) - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 2px);
-}
-
-.mobile-contact-page .contact-map-background svg {
-  width: auto;
-  min-width: 100%;
-  min-height: 25rem;
-  aspect-ratio: 1760 / 716;
-  opacity: 0.65;
-}
-
-.mobile-shell[data-orientation='portrait'] .contact-map-background svg {
-  right: 0;
-  transform: translateX(8%);
-}
-
-.mobile-shell[data-orientation='landscape'] .contact-map-background svg {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }

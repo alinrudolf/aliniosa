@@ -1,4 +1,5 @@
 import { type KeyboardEvent, type ReactNode, useEffect, useId, useRef, useState } from 'react';
+import { routes } from '../../app/routes';
 import { type ViewportLayoutMode } from '../../app/viewportLayout';
 import { type SiteHeader } from '../../data/navigation';
 import { MobileHeader } from './MobileHeader';
@@ -142,6 +143,7 @@ export function MobileShell({
         header={header}
         pageTitle={isNavOpen ? 'NAVIGATION' : pageTitle}
         isMenuOpen={isNavOpen}
+        menuIcon={activeHash === routes.logs ? 'archive' : 'menu'}
         menuButtonRef={menuButtonRef}
         menuPanelId={menuPanelId}
         onMenuToggle={() => setIsNavOpen((current) => !current)}

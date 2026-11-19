@@ -1,3 +1,13 @@
+export const logsPage = {
+  label: '[LOGS]',
+  status: 'Coming soon',
+  title: 'COMING SOON',
+  summaryLabel: 'Summary',
+  summary: 'Nothing here yet.',
+  descriptionLabel: 'Description',
+  description: 'This section will contain various writings and articles... once I get to writing them. :)',
+};
+
 export type LogRecord = {
   id: string;
   stamp: string;

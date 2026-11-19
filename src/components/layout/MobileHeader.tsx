@@ -6,6 +6,7 @@ type MobileHeaderProps = {
   header: SiteHeader;
   pageTitle: string;
   isMenuOpen: boolean;
+  menuIcon?: 'archive' | 'menu';
   menuButtonRef: RefObject<HTMLButtonElement | null>;
   menuPanelId: string;
   onMenuToggle: () => void;
@@ -15,6 +16,7 @@ export function MobileHeader({
   header,
   pageTitle,
   isMenuOpen,
+  menuIcon = 'menu',
   menuButtonRef,
   menuPanelId,
   onMenuToggle,
@@ -38,13 +40,19 @@ export function MobileHeader({
         aria-expanded={isMenuOpen}
         aria-controls={menuPanelId}
         onClick={onMenuToggle}
-        className="mobile-menu-button mr-[var(--mobile-menu-button-offset)] grid min-h-[44px] min-w-[44px] place-items-center bg-[color:var(--bg-crt)] text-[color:var(--amber-base)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-[-1px] focus-visible:outline-[color:var(--amber-core)]"
+        className={`mobile-menu-button grid min-h-[44px] min-w-[44px] place-items-center bg-[color:var(--bg-crt)] text-[color:var(--amber-base)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-[-1px] focus-visible:outline-[color:var(--amber-core)] ${menuIcon === 'archive' ? 'mr-[var(--space-1)]' : 'mr-[var(--mobile-menu-button-offset)]'}`}
       >
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-6 w-6">
-          <path d="M4 7H20" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
-          <path d="M4 12H20" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
-          <path d="M4 17H20" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
-        </svg>
+        {menuIcon === 'archive' ? (
+          <svg width="18" height="20" viewBox="0 0 18 20" fill="currentColor" aria-hidden="true">
+            <path fillRule="evenodd" d="M1 0h16a1 1 0 0 1 1 1v8H0V1a1 1 0 0 1 1-1Zm5 3v2h6V3H6ZM0 11h18v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1v-8Zm6 3v2h6v-2H6Z" />
+          </svg>
+        ) : (
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-6 w-6">
+            <path d="M4 7H20" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+            <path d="M4 12H20" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+            <path d="M4 17H20" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+          </svg>
+        )}
       </button>
     </header>
   );
